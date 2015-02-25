@@ -2,6 +2,12 @@ package ec.vector;
 
 import ec.*;
 import ec.util.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.InputStreamReader;
+import java.io.FileInputStream;
+import java.util.*;
+import java.io.IOException;
 
 /* 
  * FloatVectorSpecies.java
@@ -155,6 +161,15 @@ import ec.util.*;
  
 public class FloatVectorSpecies extends VectorSpecies
     {
+
+    public final static String P_RUTA_A_COORDENADAS = "ruta-coordenadas";
+    public final static String P_RUTA_A_ADYACENCIAS = "ruta-adyacencias";
+    public final static String P_RUTA_A_ANTENAS = "ruta-antenas";
+
+    public final static String P_NROPUNTOS = "numero-puntos";
+
+
+    
     public final static String P_MINGENE = "min-gene";
 
     public final static String P_MAXGENE = "max-gene";
@@ -262,6 +277,62 @@ public class FloatVectorSpecies extends VectorSpecies
     public static final int DEFAULT_OUT_OF_BOUNDS_RETRIES = 100;
                 
     static final double SIMULATED_BINARY_CROSSOVER_EPS = 1.0e-14;   
+
+
+
+    //Defino variables globales para toda la especie
+    protected int numero_de_puntos;
+    protected float [] latitudes;
+    protected float [] longitudes;
+    protected int [] pto_inicial_segmento;
+    protected int [] pto_final_segmento;
+    protected int [] cantidad_vehiculos_segmento;
+    protected float [] precio_antena;
+    protected float [] radio_antena;
+    protected float [] potencia_antena;
+    protected float [] dbi_antena;
+
+
+    public int getNumeroDePuntos(){
+        return numero_de_puntos;
+    }
+
+    public float [] getLatitudes(){
+        return latitudes;
+    }
+
+    public float[] getLongitudes(){
+        return longitudes;
+    }
+
+    public int [] getPtoInicialSegmento(){
+        return pto_inicial_segmento;
+    }
+
+    public int [] getPtoFinalSegmento(){
+        return pto_final_segmento;
+    }
+
+    public int [] getCantidadVehiculosSegmento(){
+        return cantidad_vehiculos_segmento;
+    }
+
+    public float [] getPrecioAntena(){
+        return precio_antena;
+    }
+
+
+    public float [] getRadioAntena(){
+        return radio_antena;
+    }
+
+    public float [] getPotenciaAntena(){
+        return potencia_antena;
+    }
+
+    public float [] getDbiAntena(){
+        return dbi_antena;
+    }
 
     public void outOfRangeRetryLimitReached(EvolutionState state)
         {
@@ -379,6 +450,84 @@ public class FloatVectorSpecies extends VectorSpecies
                 base.push(P_MAXGENE), def.push(P_MAXGENE));
         fill(minGene, _minGene);
         fill(maxGene, _maxGene);
+
+        
+
+        //Obtengo el numero de puntos del archivo de parametros
+        numero_de_puntos = state.parameters.getIntWithDefault(base.push(P_NROPUNTOS),def.push(P_NROPUNTOS),0);
+
+        //Pido memoria para las estructuras
+        latitudes= new float[numero_de_puntos];
+        longitudes= new float[numero_de_puntos];
+        pto_inicial_segmento = new int [genomeSize];
+        pto_final_segmento = new int [genomeSize];
+        cantidad_vehiculos_segmento=new int [genomeSize];
+        dbi_antena=new float[(int)Math.round(maxGene[0])];
+        potencia_antena=new float[(int)Math.round(maxGene[0])];
+        precio_antena=new float[(int)Math.round(maxGene[0])];
+        radio_antena=new float[(int)Math.round(maxGene[0])];
+
+        try{
+            //Cargo las coordenadas
+            String ruta_coordenadas = state.parameters.getStringWithDefault(base.push(P_RUTA_A_COORDENADAS), def.push(P_RUTA_A_COORDENADAS), null);
+            
+            File fin = new File(ruta_coordenadas);
+            FileInputStream fis = new FileInputStream(fin);
+     
+            BufferedReader br = new BufferedReader(new InputStreamReader(fis));
+        
+            String line = null;
+            String [] line_tokens=null;
+            for (int i=0;i<numero_de_puntos;i++){
+                line = br.readLine();
+                line_tokens = line.split(" ");
+                latitudes[i]=Float.parseFloat(line_tokens[1]);
+                longitudes[i]=Float.parseFloat(line_tokens[2]);
+            }
+            br.close();
+
+            //Cargo los segmentos
+            String ruta_adyacencias = state.parameters.getStringWithDefault(base.push(P_RUTA_A_ADYACENCIAS), def.push(P_RUTA_A_ADYACENCIAS), null);
+            fin = new File(ruta_adyacencias);
+            fis = new FileInputStream(fin);
+            br = new BufferedReader(new InputStreamReader(fis));
+            line=null;
+            line_tokens=null;
+            for (int i=0;i<genomeSize;i++){
+                line = br.readLine();
+                line_tokens = line.split(" ");
+                pto_inicial_segmento[i]=Integer.parseInt(line_tokens[0]);
+                pto_final_segmento[i]=Integer.parseInt(line_tokens[1]);
+                cantidad_vehiculos_segmento[i]=Integer.parseInt(line_tokens[2]);
+            }
+            br.close();
+
+
+            //Cargo las antenas
+            String ruta_antenas = state.parameters.getStringWithDefault(base.push(P_RUTA_A_ANTENAS), def.push(P_RUTA_A_ANTENAS), null);
+            fin = new File(ruta_antenas);
+            fis = new FileInputStream(fin);
+            br = new BufferedReader(new InputStreamReader(fis));
+            line=null;
+            line_tokens=null;
+            dbi_antena[0]=0;
+            potencia_antena[0]=0;
+            precio_antena[0]=0;
+            radio_antena[0]=0;
+            for (int i=1;i<Math.round(maxGene[0]);i++){
+                line = br.readLine();
+                line_tokens = line.split(" ");
+                dbi_antena[i]=Float.parseFloat(line_tokens[0]);
+                potencia_antena[i]=Float.parseFloat(line_tokens[1]);
+                precio_antena[i]=Float.parseFloat(line_tokens[2]);
+                radio_antena[i]=Float.parseFloat(line_tokens[3]);
+            }
+            br.close();
+
+        }catch(IOException e){
+            state.output.fatal (e+"hubo algun problema con la lectura del archivo");
+        }
+
 
 
 
