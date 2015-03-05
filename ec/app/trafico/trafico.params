@@ -5,7 +5,7 @@ eval.problem = ec.app.trafico.Trafico
 
 # Defino las variables generales al problema
 pop.subpop.0.size =                     80
-generations =                           5001
+generations =                           101
 
 # Defino la representacion
 pop.subpop.0.species = ec.vector.FloatVectorSpecies
@@ -16,7 +16,8 @@ pop.subpop.0.species.max-gene 	= 3.999999999999999999
 
 #Dos objetivos, los dos se minimizan
 pop.subpop.0.species.fitness.num-objectives = 2
-pop.subpop.0.species.fitness.maximize = false
+pop.subpop.0.species.fitness.maximize.0 = false
+pop.subpop.0.species.fitness.maximize.1 = true
 
 
 #Intermediate crossover (pagina 117 manual de ECJ)
@@ -24,8 +25,11 @@ pop.subpop.0.species.crossover-type	= intermediate
 pop.subpop.0.species.line-extension = 0.25
 
 #Mutacion gaussiana (pagina 122 manual de ECJ)
-#Probabilidad de cambiar un gen del individuo sorteado para ser mutado
-pop.subpop.0.species.mutation-prob = 0.1
+
+prob-mut-cambiar-a-cero = 0.5
+prob-mut-cambiar-antena = 0.25
+prob-mut-cambiar-gaussiana = 0.25
+
 #Mutacion gaussiana con std y numero de reintento en caso que el resultado este fuera de los limites de min y max gene
 pop.subpop.0.species.mutation-type      = gauss
 pop.subpop.0.species.mutation-stdev = 0.25
@@ -48,7 +52,7 @@ seed.0 = time
 
 #Estadisticas
 stat.silent.print = true
-stat.modulo.front = 1000
+stat.modulo.front = 5
 #silent = true
 
 #Numero de ejecuciones
@@ -59,3 +63,7 @@ pop.subpop.0.species.ruta-coordenadas = /home/renzomassobrio/Desktop/MIC_RUP/ecj
 pop.subpop.0.species.ruta-adyacencias = /home/renzomassobrio/Desktop/MIC_RUP/ecj/ec/app/trafico/adyacencias.txt
 pop.subpop.0.species.ruta-antenas = /home/renzomassobrio/Desktop/MIC_RUP/ecj/ec/app/trafico/antenas.txt
 pop.subpop.0.species.numero-puntos = 99
+
+
+#Esta probabilidad de mutacion no se tiene en cuenta para nada (pero la pide el ecj). Cambiarla no tiene ningun efecto.
+pop.subpop.0.species.mutation-prob = 0.1

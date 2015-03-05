@@ -49,6 +49,7 @@ import java.io.*;
 public class MultiObjectiveStatistics extends SimpleStatistics
     {   
     /** front file parameter */
+    public static final String P_MODULO_FRONT_FILE = "modulo.front";
     public static final String P_PARETO_FRONT_FILE = "front";
     public static final String P_SILENT_FRONT_FILE = "silent.front";
         
@@ -56,6 +57,7 @@ public class MultiObjectiveStatistics extends SimpleStatistics
 
     /** The pareto front log */
     public int frontLog = 0;  // stdout by default
+    public int moduloFront;
 
     public void setup(final EvolutionState state, final Parameter base)
         {
@@ -65,6 +67,10 @@ public class MultiObjectiveStatistics extends SimpleStatistics
         // yes, we're stating it a second time.  It's correct logic.
         silentFront = state.parameters.getBoolean(base.push(P_SILENT_FRONT_FILE), null, silentFront);
         
+
+        moduloFront = state.parameters.getInt(base.push(P_MODULO_FRONT_FILE),null, moduloFront);
+
+
         File frontFile = state.parameters.getFile(base.push(P_PARETO_FRONT_FILE),null);
 
         if (silentFront)
@@ -84,6 +90,71 @@ public class MultiObjectiveStatistics extends SimpleStatistics
             }
         else state.output.warning("No Pareto Front statistics file specified, printing to stdout at end.", base.push(P_PARETO_FRONT_FILE));
         }
+
+
+    /** Logs the best individual of the generation. */
+    public void postEvaluationStatistics(final EvolutionState state)
+        {
+
+        super.postEvaluationStatistics(state);
+
+        // if (state.generation%moduloFront==0){
+        //     for (int s = 0; s < state.population.subpops.length; s++)
+        //         {
+        //         MultiObjectiveFitness typicalFitness = (MultiObjectiveFitness)(state.population.subpops[s].individuals[0].fitness);
+        //         //if (doFinal) state.output.println("\n\nPareto Front of Subpopulation " + s, statisticslog);
+
+        //         // build front
+        //         ArrayList front = typicalFitness.partitionIntoParetoFront(state.population.subpops[s].individuals, null, null);
+
+        //         // sort by objective[0]
+        //         Object[] sortedFront = front.toArray();
+        //         QuickSort.qsort(sortedFront, new SortComparator()
+        //             {
+        //             public boolean lt(Object a, Object b)
+        //                 {
+        //                 return (((MultiObjectiveFitness) (((Individual) a).fitness)).getObjective(0) < 
+        //                     (((MultiObjectiveFitness) ((Individual) b).fitness)).getObjective(0));
+        //                 }
+                    
+        //             public boolean gt(Object a, Object b)
+        //                 {
+        //                 return (((MultiObjectiveFitness) (((Individual) a).fitness)).getObjective(0) > 
+        //                     ((MultiObjectiveFitness) (((Individual) b).fitness)).getObjective(0));
+        //                 }
+        //             });
+                            
+                    
+        //         // write short version of front out to disk
+        //         if (!silentFront)
+        //             {
+        //             if (state.population.subpops.length > 1)
+        //                 state.output.println("Subpopulation " + s, frontLog);
+        //             //Imprimir la generacion 
+        //             state.output.println("Generacion: "+ state.generation , frontLog);
+        //             for (int i = 0; i < sortedFront.length; i++)
+        //                 {
+        //                 Individual ind = (Individual)(sortedFront[i]);
+        //                 MultiObjectiveFitness mof = (MultiObjectiveFitness) (ind.fitness);
+        //                 double[] objectives = mof.getObjectives();
+            
+        //                 String line = "";
+        //                 for (int f = 0; f < objectives.length; f++)
+        //                     line += (objectives[f] + " ");
+        //                 state.output.println(line, frontLog);
+        //                 }
+        //             }
+        //      }
+        // }
+        }   
+
+
+
+
+
+
+
+
 
 
 
@@ -140,6 +211,6 @@ public class MultiObjectiveStatistics extends SimpleStatistics
                     state.output.println(line, frontLog);
                     }
                 }
-            }
+             }
         }
     }

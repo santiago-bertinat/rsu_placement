@@ -296,40 +296,29 @@ public class FloatVectorIndividual extends VectorIndividual
      */
     public void defaultMutate(EvolutionState state, int thread)
         {
-        FloatVectorSpecies s = (FloatVectorSpecies) species;
+	        FloatVectorSpecies s = (FloatVectorSpecies) species;
 
-        MersenneTwisterFast rng = state.random[thread];
-        for(int x = 0; x < genome.length; x++)
-            if (rng.nextBoolean(s.mutationProbability(x)))
-                {
-                float old = genome[x];
-                for(int retries = 0; retries < s.duplicateRetries(x) + 1; retries++)
-                    {
-                    switch(s.mutationType(x))
-                        {
-                        case FloatVectorSpecies.C_GAUSS_MUTATION:
-                            gaussianMutation(state, rng, s, x);
-                            break;
-                        case FloatVectorSpecies.C_POLYNOMIAL_MUTATION:
-                            polynomialMutation(state, rng, s, x);
-                            break;
-                        case FloatVectorSpecies.C_RESET_MUTATION:
-                            floatResetMutation(rng, s, x);
-                            break;
-                        case FloatVectorSpecies.C_INTEGER_RESET_MUTATION:
-                            integerResetMutation(rng, s, x);
-                            break;
-                        case FloatVectorSpecies.C_INTEGER_RANDOM_WALK_MUTATION:
-                            integerRandomWalkMutation(rng, s, x);
-                            break;
-                        default:
-                            state.output.fatal("In FloatVectorIndividual.defaultMutate, default case occurred when it shouldn't have");
-                            break;
-                        }
-                    if (genome[x] != old) break;
-                    // else genome[x] = old;  // try again
-                    }
-                }
+	        MersenneTwisterFast rng = state.random[thread];
+
+	        int posicion_sorteada=rng.nextInt(genome.length);		        
+
+	        double mutacion_sorteada = rng.nextFloat();
+	        int tipo_infraestructura=(int) Math.floor(genome[posicion_sorteada]);
+	        if (mutacion_sorteada<s.getPMutCambiarACero()){
+	        	//Saco la antena de la posicion
+	        	genome[posicion_sorteada]=genome[posicion_sorteada]-tipo_infraestructura;
+	        }
+	        else if (mutacion_sorteada< s.getPMutCambiarACero()+ s.getPMutCambiarAntena()){
+	        	//Cambio el tipo de antena
+	        	genome[posicion_sorteada]=genome[posicion_sorteada]-tipo_infraestructura;
+	        	genome[posicion_sorteada]=genome[posicion_sorteada]+1+rng.nextInt(3);
+
+	        }
+	        else{
+	        	//Hago mutacion gaussiana
+	        	gaussianMutation(state, rng, s, posicion_sorteada);
+	        }
+		    
         }
         
     void integerRandomWalkMutation(MersenneTwisterFast random, FloatVectorSpecies species, int index)

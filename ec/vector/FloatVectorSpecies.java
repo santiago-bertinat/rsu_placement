@@ -162,6 +162,10 @@ import java.io.IOException;
 public class FloatVectorSpecies extends VectorSpecies
     {
 
+    public final static String P_MUT_CAMBIAR_A_CERO= "prob-mut-cambiar-a-cero";
+    public final static String P_MUT_CAMBIAR_ANTENA= "prob-mut-cambiar-antena";
+    public final static String P_MUT_CAMBIAR_GAUSSIANA= "prob-mut-cambiar-gaussiana";
+
     public final static String P_RUTA_A_COORDENADAS = "ruta-coordenadas";
     public final static String P_RUTA_A_ADYACENCIAS = "ruta-adyacencias";
     public final static String P_RUTA_A_ANTENAS = "ruta-antenas";
@@ -291,7 +295,21 @@ public class FloatVectorSpecies extends VectorSpecies
     protected float [] radio_antena;
     protected float [] potencia_antena;
     protected float [] dbi_antena;
+    protected float p_mut_cambiar_a_cero;
+    protected float p_mut_cambiar_antena;
+    protected float p_mut_cambiar_gaussiana;
 
+    public float getPMutCambiarACero(){
+        return p_mut_cambiar_a_cero;
+    }
+
+    public float getPMutCambiarAntena(){
+        return p_mut_cambiar_antena;
+    }
+
+    public float getPMutCambiarGaussiana(){
+        return p_mut_cambiar_gaussiana;
+    }
 
     public int getNumeroDePuntos(){
         return numero_de_puntos;
@@ -452,6 +470,12 @@ public class FloatVectorSpecies extends VectorSpecies
         fill(maxGene, _maxGene);
 
         
+
+        //Levanto probabilidades para la mutacion
+        p_mut_cambiar_a_cero=state.parameters.getFloat(base.push(P_MUT_CAMBIAR_A_CERO),def.push(P_MUT_CAMBIAR_A_CERO), 0);
+        p_mut_cambiar_antena=state.parameters.getFloat(base.push(P_MUT_CAMBIAR_ANTENA),def.push(P_MUT_CAMBIAR_ANTENA), 0);
+        p_mut_cambiar_gaussiana=state.parameters.getFloat(base.push(P_MUT_CAMBIAR_GAUSSIANA),def.push(P_MUT_CAMBIAR_GAUSSIANA), 0);
+
 
         //Obtengo el numero de puntos del archivo de parametros
         numero_de_puntos = state.parameters.getIntWithDefault(base.push(P_NROPUNTOS),def.push(P_NROPUNTOS),0);
