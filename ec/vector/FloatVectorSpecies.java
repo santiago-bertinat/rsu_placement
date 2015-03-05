@@ -291,6 +291,7 @@ public class FloatVectorSpecies extends VectorSpecies
     protected int [] pto_inicial_segmento;
     protected int [] pto_final_segmento;
     protected int [] cantidad_vehiculos_segmento;
+    protected int [] velocidad_segmento;
     protected float [] precio_antena;
     protected float [] radio_antena;
     protected float [] potencia_antena;
@@ -333,6 +334,10 @@ public class FloatVectorSpecies extends VectorSpecies
 
     public int [] getCantidadVehiculosSegmento(){
         return cantidad_vehiculos_segmento;
+    }
+
+    public int [] getVelocidadSegmento(){
+        return velocidad_segmento;
     }
 
     public float [] getPrecioAntena(){
@@ -486,6 +491,7 @@ public class FloatVectorSpecies extends VectorSpecies
         pto_inicial_segmento = new int [genomeSize];
         pto_final_segmento = new int [genomeSize];
         cantidad_vehiculos_segmento=new int [genomeSize];
+        velocidad_segmento=new int [genomeSize];
         dbi_antena=new float[(int)Math.round(maxGene[0])];
         potencia_antena=new float[(int)Math.round(maxGene[0])];
         precio_antena=new float[(int)Math.round(maxGene[0])];
@@ -502,11 +508,10 @@ public class FloatVectorSpecies extends VectorSpecies
         
             String line = null;
             String [] line_tokens=null;
-            for (int i=0;i<numero_de_puntos;i++){
-                line = br.readLine();
+            for (line=br.readLine(); line!=null; line=br.readLine()){
                 line_tokens = line.split(" ");
-                latitudes[i]=Float.parseFloat(line_tokens[1]);
-                longitudes[i]=Float.parseFloat(line_tokens[2]);
+                latitudes[Integer.parseInt(line_tokens[0])]=Float.parseFloat(line_tokens[1]);
+                longitudes[Integer.parseInt(line_tokens[0])]=Float.parseFloat(line_tokens[2]);
             }
             br.close();
 
@@ -523,6 +528,7 @@ public class FloatVectorSpecies extends VectorSpecies
                 pto_inicial_segmento[i]=Integer.parseInt(line_tokens[0]);
                 pto_final_segmento[i]=Integer.parseInt(line_tokens[1]);
                 cantidad_vehiculos_segmento[i]=Integer.parseInt(line_tokens[2]);
+                velocidad_segmento[i]=Integer.parseInt(line_tokens[3]);
             }
             br.close();
 
