@@ -10,7 +10,7 @@ generations =                           101
 # Defino la representacion
 pop.subpop.0.species = ec.vector.FloatVectorSpecies
 pop.subpop.0.species.ind = ec.vector.FloatVectorIndividual
-pop.subpop.0.species.genome-size	= 38
+pop.subpop.0.species.genome-size	= 121
 pop.subpop.0.species.min-gene	= 0
 pop.subpop.0.species.max-gene 	= 3.999999999999999999	
 
@@ -62,7 +62,7 @@ jobs = 1
 pop.subpop.0.species.ruta-coordenadas = /home/renzomassobrio/Desktop/MIC_RUP/ecj/ec/app/trafico/coordenadas.txt
 pop.subpop.0.species.ruta-adyacencias = /home/renzomassobrio/Desktop/MIC_RUP/ecj/ec/app/trafico/adyacencias.txt
 pop.subpop.0.species.ruta-antenas = /home/renzomassobrio/Desktop/MIC_RUP/ecj/ec/app/trafico/antenas.txt
-pop.subpop.0.species.numero-puntos = 120
+pop.subpop.0.species.numero-puntos = 121
 
 
 #Esta probabilidad de mutacion no se tiene en cuenta para nada (pero la pide el ecj). Cambiarla no tiene ningun efecto.
