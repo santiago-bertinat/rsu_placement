@@ -75,7 +75,7 @@ public class Trafico extends Problem implements SimpleProblemForm
                 xcentro=centro[0];
                 ycentro=centro[1];
                 radio_circulo=t_spe.getRadioAntena()[tipo_infraestructura];
-                System.out.println("Con centro "+xcentro+" "+ycentro + " y radio "+radio_circulo+" cubro a: ");
+                //System.out.println("Con centro "+xcentro+" "+ycentro + " y radio "+radio_circulo+" cubro a: ");
                 //Veo la cobertura en cada uno de los segmentos
                 for (int k=0;k<t_ind.genome.length;k++){
 
@@ -89,7 +89,7 @@ public class Trafico extends Problem implements SimpleProblemForm
 
                     if (k==i){
                         //Separo el calculo de la cobertura sobre el propio segmento
-                        qos+= t_spe.getCantidadVehiculosSegmento()[k] *Math.min(radio_circulo, distancia_entre_dos_puntos(xcentro,ycentro,xini,yini)) + Math.min(radio_circulo, distancia_entre_dos_puntos(xcentro,ycentro,xfin,yfin));
+                        qos+= t_spe.getCantidadVehiculosSegmento()[k]* (Math.min(radio_circulo, distancia_entre_dos_puntos(xcentro,ycentro,xini,yini)) + Math.min(radio_circulo, distancia_entre_dos_puntos(xcentro,ycentro,xfin,yfin)))/t_spe.getVelocidadSegmento()[k];
 
                     }
                     else{
@@ -98,12 +98,12 @@ public class Trafico extends Problem implements SimpleProblemForm
                         fin_dentro = radio_circulo > distancia_entre_dos_puntos(xcentro, ycentro, xfin, yfin);
                         if (ini_dentro && fin_dentro){
                             //El segmento esta completamente cubierto
-                            qos+= distancia_entre_dos_puntos(xini,yini,xfin,yfin)*t_spe.getCantidadVehiculosSegmento()[k];
-                            System.out.println("Segmento " + t_spe.getPtoInicialSegmento()[k]+ " "+ t_spe.getPtoFinalSegmento()[k] + " (T) - "+ xini+ " "+ yini+" "+xfin+" "+yfin);
+                            qos+= distancia_entre_dos_puntos(xini,yini,xfin,yfin)*t_spe.getCantidadVehiculosSegmento()[k]/t_spe.getVelocidadSegmento()[k];
+                            //System.out.println("Segmento " + t_spe.getPtoInicialSegmento()[k]+ " "+ t_spe.getPtoFinalSegmento()[k] + " (T) - "+ xini+ " "+ yini+" "+xfin+" "+yfin);
                         }
                         else if (ini_dentro || fin_dentro){
                             //Hay un punto adentro y uno afuera
-                            System.out.println("Segmento " + t_spe.getPtoInicialSegmento()[k]+ " "+ t_spe.getPtoFinalSegmento()[k] + " (1P) - "+ xini+ " "+ yini+" "+xfin+" "+yfin);
+                            //System.out.println("Segmento " + t_spe.getPtoInicialSegmento()[k]+ " "+ t_spe.getPtoFinalSegmento()[k] + " (1P) - "+ xini+ " "+ yini+" "+xfin+" "+yfin);
 
                             if (ini_dentro){
                                 //El punto de adentro es el inicial
@@ -116,7 +116,7 @@ public class Trafico extends Problem implements SimpleProblemForm
                             }
 
                             beta= Math.asin(dist_extremo_centro*Math.sin(alpha)/radio_circulo);
-                            qos+=t_spe.getCantidadVehiculosSegmento()[k] * (Math.sin(180-alpha-beta)*radio_circulo/Math.sin(alpha));
+                            qos+=t_spe.getCantidadVehiculosSegmento()[k] * (Math.sin(180-alpha-beta)*radio_circulo/Math.sin(alpha))/t_spe.getVelocidadSegmento()[k];
                         }
                         else if (distancia_punto_recta(xcentro,ycentro,xini,yini,xfin,yfin) < radio_circulo){
                             //La recta intersecta el circulo, falta ver si el segmento tambien
@@ -127,15 +127,15 @@ public class Trafico extends Problem implements SimpleProblemForm
                             dAQ=Math.sqrt(Math.pow(dAC,2)-Math.pow(m,2));
                             dQB=Math.sqrt(Math.pow(dBC,2)-Math.pow(m,2));
                             if (dAQ<dAB && dQB<dAB){
-                                System.out.println("Segmento " + t_spe.getPtoInicialSegmento()[k]+ " "+ t_spe.getPtoFinalSegmento()[k] + " (2P) - "+ xini+ " "+ yini+" "+xfin+" "+yfin);
+                                //System.out.println("Segmento " + t_spe.getPtoInicialSegmento()[k]+ " "+ t_spe.getPtoFinalSegmento()[k] + " (2P) - "+ xini+ " "+ yini+" "+xfin+" "+yfin);
                                 //El segmento intersecta el circulo
                                 lambda=Math.sqrt(Math.pow(radio_circulo,2) - Math.pow(m,2));
-                                qos+=t_spe.getCantidadVehiculosSegmento()[k] * (2*lambda);
+                                qos+=t_spe.getCantidadVehiculosSegmento()[k] * (2*lambda)/t_spe.getVelocidadSegmento()[k];
                             }
                         }
                     }
                 }
-                System.out.println("-----------------------------------------------------------------------------------");
+                //System.out.println("-----------------------------------------------------------------------------------");
             }    
 
         }
@@ -162,7 +162,6 @@ public class Trafico extends Problem implements SimpleProblemForm
 
 
     public double distancia_entre_dos_puntos(double xa, double ya, double xb, double yb){
-        //return Math.sqrt((xa-xb)*(xa-xb) + (ya-yb)*(ya-yb));
 
         double deglen=110.25*1000;
         double x= xa-xb;
@@ -172,17 +171,6 @@ public class Trafico extends Problem implements SimpleProblemForm
     }
 
     public double distancia_punto_recta(double xp,double yp,double x1,double y1,double x2,double y2){
-        // double a= Math.abs((y2-y1)*xp - (x2-x1)*yp + x2*y1 - y2*x1);
-        // double b= Math.pow(y2-y1,2)+ Math.pow(x2-x1,2);
-        // return a/Math.sqrt(b);
-
-        // double deglen=110.25*1000;
-        // yp=yp*Math.cos(xp);
-        // y1=y1*Math.cos(xp);
-        // y2=y2*Math.cos(xp);
-        // double a= Math.abs((y2-y1)*xp - (x2-x1)*yp + x2*y1 - y2*x1);
-        // double b= Math.pow(y2-y1,2)+ Math.pow(x2-x1,2);
-        //return deglen*a/Math.sqrt(b);
 
         //Usando la formula de Heron
         double d1p, d2p,d12;
