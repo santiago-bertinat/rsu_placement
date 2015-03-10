@@ -89,7 +89,7 @@ public class Trafico extends Problem implements SimpleProblemForm
 
                     if (k==i){
                         //Separo el calculo de la cobertura sobre el propio segmento
-                        qos+= t_spe.getCantidadVehiculosSegmento()[k]* (Math.min(radio_circulo, distancia_entre_dos_puntos(xcentro,ycentro,xini,yini)) + Math.min(radio_circulo, distancia_entre_dos_puntos(xcentro,ycentro,xfin,yfin)))/t_spe.getVelocidadSegmento()[k];
+                        qos+= t_spe.getCantidadVehiculosSegmento()[k] *(Math.min(radio_circulo, distancia_entre_dos_puntos(xcentro,ycentro,xini,yini)) + Math.min(radio_circulo, distancia_entre_dos_puntos(xcentro,ycentro,xfin,yfin)))/(t_spe.getVelocidadSegmento()[k]*1000);
 
                     }
                     else{
@@ -98,7 +98,7 @@ public class Trafico extends Problem implements SimpleProblemForm
                         fin_dentro = radio_circulo > distancia_entre_dos_puntos(xcentro, ycentro, xfin, yfin);
                         if (ini_dentro && fin_dentro){
                             //El segmento esta completamente cubierto
-                            qos+= distancia_entre_dos_puntos(xini,yini,xfin,yfin)*t_spe.getCantidadVehiculosSegmento()[k]/t_spe.getVelocidadSegmento()[k];
+                            qos+= distancia_entre_dos_puntos(xini,yini,xfin,yfin)*t_spe.getCantidadVehiculosSegmento()[k]/(t_spe.getVelocidadSegmento()[k]*1000);
                             //System.out.println("Segmento " + t_spe.getPtoInicialSegmento()[k]+ " "+ t_spe.getPtoFinalSegmento()[k] + " (T) - "+ xini+ " "+ yini+" "+xfin+" "+yfin);
                         }
                         else if (ini_dentro || fin_dentro){
@@ -111,12 +111,29 @@ public class Trafico extends Problem implements SimpleProblemForm
                                 dist_extremo_centro= distancia_entre_dos_puntos(xcentro,ycentro,xini,yini);
                             }else{
                                 //El punto de adentro es el final
-                                alpha=angulo_entre_rectas(xcentro,ycentro,xini,yini,xini,yini,xfin,yfin);
-                                dist_extremo_centro= distancia_entre_dos_puntos(xcentro,ycentro,xini,yini);
+                                alpha=angulo_entre_rectas(xcentro,ycentro,xfin,yfin,xfin,yfin,xini,yini);
+                                dist_extremo_centro= distancia_entre_dos_puntos(xcentro,ycentro,xfin,yfin);
                             }
 
-                            beta= Math.asin(dist_extremo_centro*Math.sin(alpha)/radio_circulo);
-                            qos+=t_spe.getCantidadVehiculosSegmento()[k] * (Math.sin(180-alpha-beta)*radio_circulo/Math.sin(alpha))/t_spe.getVelocidadSegmento()[k];
+                            if (alpha!=0){
+                                //Hay angulo entre las rectas
+                                beta= Math.asin(dist_extremo_centro*Math.sin(alpha)/radio_circulo);
+                                //System.out.println("Alpha: "+alpha);
+                                //System.out.println("Beta: "+ beta);
+                                //System.out.println("Dist_ext_centro "+ dist_extremo_centro);
+                                //System.out.println("Cuenta final: "+ t_spe.getCantidadVehiculosSegmento()[k] * (Math.sin(Math.PI-alpha-beta)*radio_circulo/Math.sin(alpha))/(t_spe.getVelocidadSegmento()[k]*1000));
+                                qos+=t_spe.getCantidadVehiculosSegmento()[k] * (Math.sin(Math.PI-alpha-beta)*radio_circulo/Math.sin(alpha))/(t_spe.getVelocidadSegmento()[k]*1000);
+                            }
+                            else{
+                                //Los 3 puntos están alineados
+                                if (ini_dentro){
+                                    qos+=t_spe.getCantidadVehiculosSegmento()[k]*(radio_circulo-distancia_entre_dos_puntos(xcentro,ycentro,xini,yini))/(t_spe.getVelocidadSegmento()[k]*1000);
+                                }
+                                else{
+                                    qos+=t_spe.getCantidadVehiculosSegmento()[k]*(radio_circulo-distancia_entre_dos_puntos(xcentro,ycentro,xfin,yfin))/(t_spe.getVelocidadSegmento()[k]*1000);
+                                }
+                            }
+                            
                         }
                         else if (distancia_punto_recta(xcentro,ycentro,xini,yini,xfin,yfin) < radio_circulo){
                             //La recta intersecta el circulo, falta ver si el segmento tambien
@@ -130,10 +147,12 @@ public class Trafico extends Problem implements SimpleProblemForm
                                 //System.out.println("Segmento " + t_spe.getPtoInicialSegmento()[k]+ " "+ t_spe.getPtoFinalSegmento()[k] + " (2P) - "+ xini+ " "+ yini+" "+xfin+" "+yfin);
                                 //El segmento intersecta el circulo
                                 lambda=Math.sqrt(Math.pow(radio_circulo,2) - Math.pow(m,2));
-                                qos+=t_spe.getCantidadVehiculosSegmento()[k] * (2*lambda)/t_spe.getVelocidadSegmento()[k];
+                                qos+=t_spe.getCantidadVehiculosSegmento()[k] * (2*lambda)/(t_spe.getVelocidadSegmento()[k]*1000);
                             }
                         }
                     }
+                    //System.out.println(k+" "+qos);
+
                 }
                 //System.out.println("-----------------------------------------------------------------------------------");
             }    
