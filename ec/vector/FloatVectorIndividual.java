@@ -601,22 +601,40 @@ public class FloatVectorIndividual extends VectorIndividual
     public void reset(EvolutionState state, int thread)
         {
         FloatVectorSpecies s = (FloatVectorSpecies) species;
-        MersenneTwisterFast random = state.random[thread];
-        for (int x = 0; x < genome.length; x++)
-            {
-            int type = s.mutationType(x);
-            if (type == FloatVectorSpecies.C_INTEGER_RESET_MUTATION || 
-                type == FloatVectorSpecies.C_INTEGER_RANDOM_WALK_MUTATION)  // integer type
-                {
-                int minGene = (int)Math.floor(s.minGene(x));
-                int maxGene = (int)Math.floor(s.maxGene(x));
-                genome[x] = randomValueFromClosedInterval(minGene, maxGene, random); //minGene + random.nextInt(maxGene - minGene + 1);
-                }
-            else
-                {
-                genome[x] = (float)(s.minGene(x) + random.nextDouble(true, true) * (s.maxGene(x) - s.minGene(x)));
-                }
-            }
+
+        int ini_especial=s.getInicializacionEspecial();
+
+        if (ini_especial==3){
+        	//Inicializo tupla llena de ceros
+        	for (int x = 0; x < genome.length; x++)
+        		genome[x]=(float)0.0;
+        	s.decreaseInicializacionEspecial();
+        }
+        // else if (ini_especial==2){
+        // 	//Inicializo con greedy cobertura
+        // }
+        // else if (ini_especial==1){
+        // 	//Inicializo con greedy costo
+        // }
+        else{
+        	//Inicializo random
+        	MersenneTwisterFast random = state.random[thread];
+        	for (int x = 0; x < genome.length; x++)
+        	    {
+        	    int type = s.mutationType(x);
+        	    if (type == FloatVectorSpecies.C_INTEGER_RESET_MUTATION || 
+        	        type == FloatVectorSpecies.C_INTEGER_RANDOM_WALK_MUTATION)  // integer type
+        	        {
+        	        int minGene = (int)Math.floor(s.minGene(x));
+        	        int maxGene = (int)Math.floor(s.maxGene(x));
+        	        genome[x] = randomValueFromClosedInterval(minGene, maxGene, random); //minGene + random.nextInt(maxGene - minGene + 1);
+        	        }
+        	    else
+        	        {
+        	        genome[x] = (float)(s.minGene(x) + random.nextDouble(true, true) * (s.maxGene(x) - s.minGene(x)));
+        	        }
+        	    }
+        }     
         }
 
     public int hashCode()

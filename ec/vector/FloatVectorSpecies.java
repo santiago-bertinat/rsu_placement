@@ -299,6 +299,15 @@ public class FloatVectorSpecies extends VectorSpecies
     protected float p_mut_cambiar_a_cero;
     protected float p_mut_cambiar_antena;
     protected float p_mut_cambiar_gaussiana;
+    protected int inicializacion_especial;
+
+    public int getInicializacionEspecial(){
+        return inicializacion_especial;
+    }
+
+    public void decreaseInicializacionEspecial(){
+        inicializacion_especial--;
+    }
 
     public float getPMutCambiarACero(){
         return p_mut_cambiar_a_cero;
@@ -445,6 +454,9 @@ public class FloatVectorSpecies extends VectorSpecies
         
         setupGenome(state, base);
         
+        //Inicializo la variable de inicializaciones especiales
+        inicializacion_especial=3;
+
         // OUT OF BOUNDS RETRIES
 
         outOfBoundsRetries = state.parameters.getIntWithDefault(base.push(P_OUTOFBOUNDS_RETRIES), def.push(P_OUTOFBOUNDS_RETRIES), DEFAULT_OUT_OF_BOUNDS_RETRIES);
