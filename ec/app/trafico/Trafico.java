@@ -89,7 +89,7 @@ public class Trafico extends Problem implements SimpleProblemForm
 
                     if (k==i){
                         //Separo el calculo de la cobertura sobre el propio segmento
-                        qos+= t_spe.getCantidadVehiculosSegmento()[k] *(Math.min(radio_circulo, distancia_entre_dos_puntos(xcentro,ycentro,xini,yini)) + Math.min(radio_circulo, distancia_entre_dos_puntos(xcentro,ycentro,xfin,yfin)))/(t_spe.getVelocidadSegmento()[k]*1000);
+                        qos+= t_spe.getCantidadVehiculosSegmento()[k] *(Math.min(radio_circulo, distancia_entre_dos_puntos(xcentro,ycentro,xini,yini)) + Math.min(radio_circulo, distancia_entre_dos_puntos(xcentro,ycentro,xfin,yfin)))/(double)(t_spe.getVelocidadSegmento()[k]*1000);
 
                     }
                     else{
@@ -98,7 +98,7 @@ public class Trafico extends Problem implements SimpleProblemForm
                         fin_dentro = radio_circulo > distancia_entre_dos_puntos(xcentro, ycentro, xfin, yfin);
                         if (ini_dentro && fin_dentro){
                             //El segmento esta completamente cubierto
-                            qos+= distancia_entre_dos_puntos(xini,yini,xfin,yfin)*t_spe.getCantidadVehiculosSegmento()[k]/(t_spe.getVelocidadSegmento()[k]*1000);
+                            qos+= distancia_entre_dos_puntos(xini,yini,xfin,yfin)*t_spe.getCantidadVehiculosSegmento()[k]/(double)(t_spe.getVelocidadSegmento()[k]*1000);
                             //System.out.println("Segmento " + t_spe.getPtoInicialSegmento()[k]+ " "+ t_spe.getPtoFinalSegmento()[k] + " (T) - "+ xini+ " "+ yini+" "+xfin+" "+yfin);
                         }
                         else if (ini_dentro || fin_dentro){
@@ -117,20 +117,20 @@ public class Trafico extends Problem implements SimpleProblemForm
 
                             if (alpha!=0){
                                 //Hay angulo entre las rectas
-                                beta= Math.asin(dist_extremo_centro*Math.sin(alpha)/radio_circulo);
+                                beta= Math.asin(dist_extremo_centro*Math.sin(alpha)/(double)radio_circulo);
                                 //System.out.println("Alpha: "+alpha);
                                 //System.out.println("Beta: "+ beta);
                                 //System.out.println("Dist_ext_centro "+ dist_extremo_centro);
                                 //System.out.println("Cuenta final: "+ t_spe.getCantidadVehiculosSegmento()[k] * (Math.sin(Math.PI-alpha-beta)*radio_circulo/Math.sin(alpha))/(t_spe.getVelocidadSegmento()[k]*1000));
-                                qos+=t_spe.getCantidadVehiculosSegmento()[k] * (Math.sin(Math.PI-alpha-beta)*radio_circulo/Math.sin(alpha))/(t_spe.getVelocidadSegmento()[k]*1000);
+                                qos+=t_spe.getCantidadVehiculosSegmento()[k] * (Math.sin(Math.PI-alpha-beta)*radio_circulo/Math.sin(alpha))/(double)(t_spe.getVelocidadSegmento()[k]*1000);
                             }
                             else{
                                 //Los 3 puntos están alineados
                                 if (ini_dentro){
-                                    qos+=t_spe.getCantidadVehiculosSegmento()[k]*(radio_circulo-distancia_entre_dos_puntos(xcentro,ycentro,xini,yini))/(t_spe.getVelocidadSegmento()[k]*1000);
+                                    qos+=t_spe.getCantidadVehiculosSegmento()[k]*(radio_circulo-distancia_entre_dos_puntos(xcentro,ycentro,xini,yini))/(double)(t_spe.getVelocidadSegmento()[k]*1000);
                                 }
                                 else{
-                                    qos+=t_spe.getCantidadVehiculosSegmento()[k]*(radio_circulo-distancia_entre_dos_puntos(xcentro,ycentro,xfin,yfin))/(t_spe.getVelocidadSegmento()[k]*1000);
+                                    qos+=t_spe.getCantidadVehiculosSegmento()[k]*(radio_circulo-distancia_entre_dos_puntos(xcentro,ycentro,xfin,yfin))/(double)(t_spe.getVelocidadSegmento()[k]*1000);
                                 }
                             }
                             
@@ -147,7 +147,7 @@ public class Trafico extends Problem implements SimpleProblemForm
                                 //System.out.println("Segmento " + t_spe.getPtoInicialSegmento()[k]+ " "+ t_spe.getPtoFinalSegmento()[k] + " (2P) - "+ xini+ " "+ yini+" "+xfin+" "+yfin);
                                 //El segmento intersecta el circulo
                                 lambda=Math.sqrt(Math.pow(radio_circulo,2) - Math.pow(m,2));
-                                qos+=t_spe.getCantidadVehiculosSegmento()[k] * (2*lambda)/(t_spe.getVelocidadSegmento()[k]*1000);
+                                qos+=t_spe.getCantidadVehiculosSegmento()[k] * (2*lambda)/(double)(t_spe.getVelocidadSegmento()[k]*1000);
                             }
                         }
                     }
@@ -169,14 +169,22 @@ public class Trafico extends Problem implements SimpleProblemForm
         double lat_fin= t_spe.getLatitudes()[t_spe.getPtoFinalSegmento()[indice]];
         double lng_fin= t_spe.getLongitudes()[t_spe.getPtoFinalSegmento()[indice]];
 
-        double a=(lng_fin-lng_ini)/(lat_fin-lat_ini);
+        double a=(lng_fin-lng_ini)/(double)(lat_fin-lat_ini);
         double lambda = t_ind.genome[indice]-tipo_infraestructura;
         double [] centro = new double [2];
-        centro[0] = lat_ini + Math.sqrt((lng_fin-lng_ini)*(lng_fin-lng_ini) + (lat_fin-lat_ini)*(lat_fin-lat_ini))*lambda*(1/(Math.sqrt(1+Math.pow(a,2))));
-        centro[1] = lng_ini + Math.sqrt((lng_fin-lng_ini)*(lng_fin-lng_ini) + (lat_fin-lat_ini)*(lat_fin-lat_ini))*lambda*(a/(Math.sqrt(1+Math.pow(a,2))));
+        if (lat_fin>lat_ini)
+            centro[0]= lat_ini + Math.sqrt((lng_fin-lng_ini)*(lng_fin-lng_ini) + (lat_fin-lat_ini)*(lat_fin-lat_ini))*lambda/(double)Math.sqrt(1+(a*a));
+        else
+            centro[0]= lat_ini - Math.sqrt((lng_fin-lng_ini)*(lng_fin-lng_ini) + (lat_fin-lat_ini)*(lat_fin-lat_ini))*lambda/(double)Math.sqrt(1+(a*a));
+        
+        if (lng_fin>lng_ini)
+            centro[1]= lng_ini + Math.abs(Math.sqrt((lng_fin-lng_ini)*(lng_fin-lng_ini) + (lat_fin-lat_ini)*(lat_fin-lat_ini))*a*lambda/(double)Math.sqrt(1+(a*a)));
+        else
+            centro[1]= lng_ini - Math.abs(Math.sqrt((lng_fin-lng_ini)*(lng_fin-lng_ini) + (lat_fin-lat_ini)*(lat_fin-lat_ini))*a*lambda/(double)Math.sqrt(1+(a*a)));
+            
         //DEBUG
         //System.out.println("El centro de ("+lat_ini+" "+lng_ini+") y ("+lat_fin+" "+lng_fin+") es ("+centro[0]+" "+centro[1]+") con lambda "+lambda);   
-        return centro;  
+        return centro;    
     }
 
 
@@ -197,15 +205,15 @@ public class Trafico extends Problem implements SimpleProblemForm
         d2p=distancia_entre_dos_puntos(xp,yp,x2,y2);
         d12=distancia_entre_dos_puntos(x1,y1,x2,y2);
 
-        double s = (d1p+d2p+d12)/2;
+        double s = (d1p+d2p+d12)/(double)2;
         double area= Math.sqrt(s*(s-d1p)*(s-d2p)*(s-d12));
-        return 2*area/d12;
+        return 2*area/(double)d12;
     }
 
     public double angulo_entre_rectas(double x1,double y1,double x2,double y2, double x3,double y3,double x4,double y4){
-        double m1=(y2-y1)/(x2-x1);
-        double m2=(y4-y3)/(x4-x3);
-        return Math.atan(Math.abs((m2-m1)/(1+(m1*m2))));
+        double m1=(y2-y1)/(double)(x2-x1);
+        double m2=(y4-y3)/(double)(x4-x3);
+        return Math.atan(Math.abs((m2-m1)/(double)(1+(m1*m2))));
     }
 
 

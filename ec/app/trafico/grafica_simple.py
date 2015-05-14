@@ -25,6 +25,9 @@ f.close()
 
 scatter(results[objectives[0]],results[objectives[1]],label="NSGA-II", color="blue")
 
+
+
+
 scatter(greedy_costo[0],greedy_costo[1],color="red",marker="o")
 annotate("greedy_cost",(greedy_costo[0],greedy_costo[1]))
 
@@ -38,11 +41,22 @@ ylabel (objectives[1])
 legend(loc=0,ncol=3 ,prop={'size':10},scatterpoints = 1)
 savefig("PF.png")
 
+print "Greedy Costo"
+print  "Costo:%f QoS:%f"%(greedy_costo[0],greedy_costo[1])
+print "Greedy QoS"
+print  "Costo:%f QoS:%f"%(greedy_qos[0],greedy_qos[1])
+print "Extremo Inicial FP"
+print "Costo:%f QoS:%f"%(results["cost"][0], results["QoS"][0])
+print "Extremo Final FP"
+print "Costo:%f QoS:%f"%(results["cost"][-1], results["QoS"][-1])
 
-print "Mejora Costo"
-print results["cost"][0]*100/greedy_costo[0]
 
+for i,resultado in enumerate(results["QoS"]):
+	if (resultado>greedy_qos[1]):
+		print i
 
-print "Mejora QoS"
-print results["QoS"][-1]*100/greedy_qos[1]
+#print "FP Con igual precio que greedy costo"
+#print "Costo:%f QoS:%f"%(results["cost"][28], results["QoS"][28])
 
+print "FP Con igual qos que greedy qos"
+print "Costo:%f QoS:%f"%(results["cost"][21], results["QoS"][21])

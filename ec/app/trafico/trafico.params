@@ -10,7 +10,7 @@ generations =                           101
 # Defino la representacion
 pop.subpop.0.species = ec.vector.FloatVectorSpecies
 pop.subpop.0.species.ind = ec.vector.FloatVectorIndividual
-pop.subpop.0.species.genome-size	= 121
+pop.subpop.0.species.genome-size	= 125
 pop.subpop.0.species.min-gene	= 0
 pop.subpop.0.species.max-gene 	= 3.999999999999999999	
 
@@ -54,14 +54,15 @@ seed.0 = time
 stat.silent.print = true
 stat.modulo.front = 5
 #silent = true
+stat.solution.file=$solution.stat
 
 #Numero de ejecuciones
 jobs = 1
 
 #Ruta a archivo de coordenadas
-pop.subpop.0.species.ruta-coordenadas = /home/renzomassobrio/Desktop/MIC_RUP/ecj/ec/app/trafico/coordenadas.txt
-pop.subpop.0.species.ruta-adyacencias = /home/renzomassobrio/Desktop/MIC_RUP/ecj/ec/app/trafico/adyacencias.txt
-pop.subpop.0.species.ruta-antenas = /home/renzomassobrio/Desktop/MIC_RUP/ecj/ec/app/trafico/antenas.txt
+pop.subpop.0.species.ruta-coordenadas = coordenadas.txt
+pop.subpop.0.species.ruta-adyacencias =adyacencias.txt
+pop.subpop.0.species.ruta-antenas = antenas.txt
 pop.subpop.0.species.numero-puntos = 121
 
 
