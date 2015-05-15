@@ -14,6 +14,7 @@ import ec.Subpopulation;
 import ec.multiobjective.MultiObjectiveFitness;
 import ec.simple.SimpleStatistics;
 import ec.util.*;
+import ec.vector.*;
 import java.io.*;
 
 /* 
@@ -52,10 +53,12 @@ public class MultiObjectiveStatistics extends SimpleStatistics
     public static final String P_MODULO_FRONT_FILE = "modulo.front";
     public static final String P_PARETO_FRONT_FILE = "front";
     public static final String P_SILENT_FRONT_FILE = "silent.front";
+    public static final String P_SOLUTION_FILE="solution.file";
         
     public boolean silentFront;
 
     /** The pareto front log */
+    public int solutionLog=0;
     public int frontLog = 0;  // stdout by default
     public int moduloFront;
 
@@ -72,6 +75,15 @@ public class MultiObjectiveStatistics extends SimpleStatistics
 
 
         File frontFile = state.parameters.getFile(base.push(P_PARETO_FRONT_FILE),null);
+        File solutionFile = state.parameters.getFile(base.push(P_SOLUTION_FILE),null);
+        try
+            {
+            solutionLog = state.output.addLog(solutionFile, !compress, compress);
+            }
+        catch (IOException i)
+            {
+            state.output.fatal("An IOException occurred while trying to create the log " + solutionLog + ":\n" + i);
+            }
 
         if (silentFront)
             {
@@ -204,7 +216,25 @@ public class MultiObjectiveStatistics extends SimpleStatistics
                     Individual ind = (Individual)(sortedFront[i]);
                     MultiObjectiveFitness mof = (MultiObjectiveFitness) (ind.fitness);
                     double[] objectives = mof.getObjectives();
+                    FloatVectorIndividual t_ind = (FloatVectorIndividual)ind;
+                    FloatVectorSpecies t_spe=(FloatVectorSpecies)ind.species;
         
+                    //Imprimo la ubicacion de antenas
+                    state.output.println("SOLUCION DEL FRENTE DE PARETO "+i,solutionLog);
+                    int tipo_infraestructura;
+                    double [] centro;
+                    for (int j=0;j<t_ind.genome.length;j++){
+                        tipo_infraestructura=(int) Math.floor(t_ind.genome[j]);
+                        if (tipo_infraestructura!=0){
+                            centro=encontrar_centro_antena(t_ind, j, tipo_infraestructura, t_spe);
+                            double radio_circulo=t_spe.getRadioAntena()[tipo_infraestructura];
+                            double posicion=t_ind.genome[j]-tipo_infraestructura;
+                            state.output.println(j+","+radio_circulo+","+posicion+","+t_spe.getPtoInicialSegmento()[j]+","+t_spe.getPtoFinalSegmento()[j]+","+t_spe.getLongitudes()[t_spe.getPtoInicialSegmento()[j]]+","+t_spe.getLatitudes()[t_spe.getPtoInicialSegmento()[j]]+","+t_spe.getLongitudes()[t_spe.getPtoFinalSegmento()[j]]+","+t_spe.getLatitudes()[t_spe.getPtoFinalSegmento()[j]]+","+centro[1]+","+centro[0], solutionLog);
+                        }     
+                    }    
+                    state.output.println("",solutionLog);
+                    state.output.println("",solutionLog);
+
                     String line = "";
                     for (int f = 0; f < objectives.length; f++)
                         line += (objectives[f] + " ");
@@ -212,5 +242,32 @@ public class MultiObjectiveStatistics extends SimpleStatistics
                     }
                 }
              }
+
+
+        }
+
+        public double [] encontrar_centro_antena (FloatVectorIndividual t_ind, int indice, int tipo_infraestructura, FloatVectorSpecies t_spe){
+            
+            double lat_ini= t_spe.getLatitudes()[t_spe.getPtoInicialSegmento()[indice]];
+            double lng_ini= t_spe.getLongitudes()[t_spe.getPtoInicialSegmento()[indice]];
+            double lat_fin= t_spe.getLatitudes()[t_spe.getPtoFinalSegmento()[indice]];
+            double lng_fin= t_spe.getLongitudes()[t_spe.getPtoFinalSegmento()[indice]];
+
+            double a=(lng_fin-lng_ini)/(double)(lat_fin-lat_ini);
+            double lambda = t_ind.genome[indice]-tipo_infraestructura;
+            double [] centro = new double [2];
+            if (lat_fin>lat_ini)
+                centro[0]= lat_ini + Math.sqrt((lng_fin-lng_ini)*(lng_fin-lng_ini) + (lat_fin-lat_ini)*(lat_fin-lat_ini))*lambda/(double)Math.sqrt(1+(a*a));
+            else
+                centro[0]= lat_ini - Math.sqrt((lng_fin-lng_ini)*(lng_fin-lng_ini) + (lat_fin-lat_ini)*(lat_fin-lat_ini))*lambda/(double)Math.sqrt(1+(a*a));
+            
+            if (lng_fin>lng_ini)
+                centro[1]= lng_ini + Math.abs(Math.sqrt((lng_fin-lng_ini)*(lng_fin-lng_ini) + (lat_fin-lat_ini)*(lat_fin-lat_ini))*a*lambda/(double)Math.sqrt(1+(a*a)));
+            else
+                centro[1]= lng_ini - Math.abs(Math.sqrt((lng_fin-lng_ini)*(lng_fin-lng_ini) + (lat_fin-lat_ini)*(lat_fin-lat_ini))*a*lambda/(double)Math.sqrt(1+(a*a)));
+                
+            //DEBUG
+            //System.out.println("El centro de ("+lat_ini+" "+lng_ini+") y ("+lat_fin+" "+lng_fin+") es ("+centro[0]+" "+centro[1]+") con lambda "+lambda);   
+            return centro;    
         }
     }
