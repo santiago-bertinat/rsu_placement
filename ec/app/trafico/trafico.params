@@ -38,10 +38,10 @@ pop.subpop.0.species.out-of-bounds-retries = 20
 
 
 pop.subpop.0.species.pipe		     	= ec.vector.breed.VectorMutationPipeline
-pop.subpop.0.species.pipe.likelihood        	= 0.1
+pop.subpop.0.species.pipe.likelihood        	= 0.01
 
 pop.subpop.0.species.pipe.source.0		= ec.vector.breed.VectorCrossoverPipeline
-pop.subpop.0.species.pipe.source.0.likelihood 	= 0.75
+pop.subpop.0.species.pipe.source.0.likelihood 	= 0.95
 pop.subpop.0.species.pipe.source.0.source.0 	= ec.select.TournamentSelection
 pop.subpop.0.species.pipe.source.0.source.1 	= same
 select.tournament.size 				= 2
