@@ -57,7 +57,7 @@ stat.modulo.front = 5
 stat.solution.file=$solution.stat
 
 #Numero de ejecuciones
-jobs = 1
+jobs = 30
 
 #Ruta a archivo de coordenadas
 pop.subpop.0.species.ruta-coordenadas = coordenadas.txt
