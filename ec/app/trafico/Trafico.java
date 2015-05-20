@@ -275,8 +275,11 @@ public class Trafico extends Problem implements SimpleProblemForm
                 }
             }
         }
-
-        double factor = 1 - (suma_area_intersecciones/(double)(cantidad_de_intersecciones*area_principal));
+        double factor;
+        if (cantidad_de_intersecciones==0)
+            factor=1;
+        else
+            factor = 1 - (suma_area_intersecciones/(double)(cantidad_de_intersecciones*area_principal));
         return factor;
     }
 

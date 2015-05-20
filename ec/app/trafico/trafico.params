@@ -61,7 +61,7 @@ jobs = 1
 
 #Ruta a archivo de coordenadas
 pop.subpop.0.species.ruta-coordenadas = coordenadas.txt
-pop.subpop.0.species.ruta-adyacencias =adyacencias.txt
+pop.subpop.0.species.ruta-adyacencias =instancias/normal.txt
 pop.subpop.0.species.ruta-antenas = antenas.txt
 pop.subpop.0.species.numero-puntos = 121
 
