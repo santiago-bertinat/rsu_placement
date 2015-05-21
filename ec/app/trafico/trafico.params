@@ -5,7 +5,7 @@ eval.problem = ec.app.trafico.Trafico
 
 # Defino las variables generales al problema
 pop.subpop.0.size =                     80
-generations =                           101
+generations =                           5001
 
 # Defino la representacion
 pop.subpop.0.species = ec.vector.FloatVectorSpecies
