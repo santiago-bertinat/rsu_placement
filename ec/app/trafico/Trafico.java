@@ -76,6 +76,7 @@ public class Trafico extends Problem implements SimpleProblemForm
                 xcentro=centro[0];
                 ycentro=centro[1];
                 radio_circulo=t_spe.getRadioAntena()[tipo_infraestructura];
+                double penalizacion_qos=factor_penalizacion(t_ind,i, t_spe);
                 //System.out.println("Con centro "+xcentro+" "+ycentro + " y radio "+radio_circulo+" cubro a: ");
                 //Veo la cobertura en cada uno de los segmentos
                 for (int k=0;k<t_ind.genome.length;k++){
@@ -91,7 +92,7 @@ public class Trafico extends Problem implements SimpleProblemForm
                     if (k==i){
                         //Separo el calculo de la cobertura sobre el propio segmento
                         qos_sin_penalizar=t_spe.getCantidadVehiculosSegmento()[k] *(Math.min(radio_circulo, distancia_entre_dos_puntos(xcentro,ycentro,xini,yini)) + Math.min(radio_circulo, distancia_entre_dos_puntos(xcentro,ycentro,xfin,yfin)))/(double)(t_spe.getVelocidadSegmento()[k]*1000);
-                        qos+= qos_sin_penalizar*factor_penalizacion(t_ind,k, t_spe);
+                        qos+= qos_sin_penalizar*penalizacion_qos;
 
                     }
                     else{
@@ -101,7 +102,7 @@ public class Trafico extends Problem implements SimpleProblemForm
                         if (ini_dentro && fin_dentro){
                             //El segmento esta completamente cubierto
                             qos_sin_penalizar= distancia_entre_dos_puntos(xini,yini,xfin,yfin)*t_spe.getCantidadVehiculosSegmento()[k]/(double)(t_spe.getVelocidadSegmento()[k]*1000);
-                            qos+= qos_sin_penalizar*factor_penalizacion(t_ind,k, t_spe);
+                            qos+= qos_sin_penalizar*penalizacion_qos;
                             //System.out.println("Segmento " + t_spe.getPtoInicialSegmento()[k]+ " "+ t_spe.getPtoFinalSegmento()[k] + " (T) - "+ xini+ " "+ yini+" "+xfin+" "+yfin);
                         }
                         else if (ini_dentro || fin_dentro){
@@ -126,17 +127,17 @@ public class Trafico extends Problem implements SimpleProblemForm
                                 //System.out.println("Dist_ext_centro "+ dist_extremo_centro);
                                 //System.out.println("Cuenta final: "+ t_spe.getCantidadVehiculosSegmento()[k] * (Math.sin(Math.PI-alpha-beta)*radio_circulo/Math.sin(alpha))/(t_spe.getVelocidadSegmento()[k]*1000));
                                 qos_sin_penalizar=t_spe.getCantidadVehiculosSegmento()[k] * (Math.sin(Math.PI-alpha-beta)*radio_circulo/Math.sin(alpha))/(double)(t_spe.getVelocidadSegmento()[k]*1000);
-                                qos+= qos_sin_penalizar*factor_penalizacion(t_ind,k, t_spe);
+                                qos+= qos_sin_penalizar*penalizacion_qos;
                             }
                             else{
                                 //Los 3 puntos están alineados
                                 if (ini_dentro){
                                     qos_sin_penalizar=t_spe.getCantidadVehiculosSegmento()[k]*(radio_circulo-distancia_entre_dos_puntos(xcentro,ycentro,xini,yini))/(double)(t_spe.getVelocidadSegmento()[k]*1000);
-                                    qos+= qos_sin_penalizar*factor_penalizacion(t_ind,k, t_spe);
+                                    qos+= qos_sin_penalizar*penalizacion_qos;
                                 }
                                 else{
                                     qos_sin_penalizar=t_spe.getCantidadVehiculosSegmento()[k]*(radio_circulo-distancia_entre_dos_puntos(xcentro,ycentro,xfin,yfin))/(double)(t_spe.getVelocidadSegmento()[k]*1000);
-                                    qos+= qos_sin_penalizar*factor_penalizacion(t_ind,k, t_spe);
+                                    qos+= qos_sin_penalizar*penalizacion_qos;
 
                                 }
                             }
@@ -155,7 +156,7 @@ public class Trafico extends Problem implements SimpleProblemForm
                                 //El segmento intersecta el circulo
                                 lambda=Math.sqrt(Math.pow(radio_circulo,2) - Math.pow(m,2));
                                 qos_sin_penalizar=t_spe.getCantidadVehiculosSegmento()[k] * (2*lambda)/(double)(t_spe.getVelocidadSegmento()[k]*1000);
-                                qos+= qos_sin_penalizar*factor_penalizacion(t_ind,k, t_spe);
+                                qos+= qos_sin_penalizar*penalizacion_qos;
 
                             }
                         }
@@ -251,8 +252,8 @@ public class Trafico extends Problem implements SimpleProblemForm
         double xcentro_principal=centro_principal[0];
         double ycentro_principal=centro_principal[1];
         double radio_principal=t_spe.getRadioAntena()[tipo_infraestructura_principal];
-        double area_principal=2*Math.PI*(radio_principal*radio_principal);
-        double cantidad_de_intersecciones=0;
+        double area_principal=Math.PI*(radio_principal*radio_principal);
+        int cantidad_de_intersecciones=0;
         double suma_area_intersecciones=0;
 
         for (int i=0;i<t_ind.genome.length;i++){
@@ -278,8 +279,11 @@ public class Trafico extends Problem implements SimpleProblemForm
         double factor;
         if (cantidad_de_intersecciones==0)
             factor=1;
+        else if (suma_area_intersecciones<area_principal)
+            factor = 1 - (0.7*(suma_area_intersecciones/(double)(cantidad_de_intersecciones*area_principal)));
         else
-            factor = 1 - (suma_area_intersecciones/(double)(cantidad_de_intersecciones*area_principal));
+            factor = 0.3 * (area_principal/(double)(suma_area_intersecciones*cantidad_de_intersecciones));
+        //System.out.println("Area: "+ (int)area_principal + " Area cubierta: "+ (int)suma_area_intersecciones + " #intersecciones: "+ cantidad_de_intersecciones+ " Factor: "+ factor);
         return factor;
     }
 
