@@ -29,9 +29,11 @@ public class Circle {
 
     if(start_inside && end_inside) {
       // The segment is totally covered
+      // System.out.println("Los dos adentro");
       return segment;
     }else if(start_inside || end_inside) {
       // One point of the segment is inside the circle
+      // System.out.println("Un punto adentro");
       Point inside_point = start_inside ? segment.start : segment.end;
       Point outside_point = start_inside ? segment.end : segment.start;
 
@@ -55,6 +57,7 @@ public class Circle {
 
       return segment.subSegment(intersection_length);
     }else if (LineSegment.pointToSegmentDistance(center, segment) < radius) {
+      // System.out.println("El segmento adentro");
       double distance = LineSegment.pointToSegmentDistance(center, segment);
 
       if (distance == 0) {

@@ -5,15 +5,10 @@ eval.problem = ec.app.trafico.Trafico
 
 # Defino las variables generales al problema
 pop.subpop.0.size =                     80
-generations =                           101
+generations =                           10001
 
 # Hilos y semillas
-evalthreads=4
-breedthreads=4
 seed.0 = time
-seed.1 = time
-seed.2 = time
-seed.3 = time
 
 
 # Defino la representacion
@@ -68,7 +63,7 @@ jobs = 30
 
 #Ruta a archivo de coordenadas
 pop.subpop.0.species.ruta-coordenadas = coordenadas.txt
-pop.subpop.0.species.ruta-adyacencias = instancias/5_segmentos.txt
+pop.subpop.0.species.ruta-adyacencias = instancias/normal.txt
 pop.subpop.0.species.ruta-antenas = antenas.txt
 pop.subpop.0.species.numero-puntos = 121
 

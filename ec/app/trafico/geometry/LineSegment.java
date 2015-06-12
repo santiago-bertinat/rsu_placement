@@ -19,11 +19,23 @@ public class LineSegment {
     double b = Point.twoPointsDistance(line2.start, line2.end);
     double c = Point.twoPointsDistance(line1.start, line2.end);
 
-    if(a + b == c) {
+    if((a + b == c) || (a + c == b) || (c + b == a)) {
       return 0;
     }
 
+    System.out.print("a: ");
+    System.out.println(a);
+    System.out.print("b: ");
+    System.out.println(b);
+    System.out.print("c: ");
+    System.out.println(c);
     double cosine = (c*c - a*a - b*b) / (-2 * a * b);
+    if (cosine > 1) {
+      return 0;
+    }
+    System.out.print("cosine: ");
+    System.out.println(cosine);
+    System.out.println(Math.acos(cosine));
     return Math.acos(cosine);
   }
 
@@ -66,7 +78,7 @@ public class LineSegment {
       int j = 0;
       // System.out.println("Size");
       // System.out.println(combination.size());
-      if (combination.size() == 1) break;
+      combination_made = combination.size() == 1;
       for (i = 0; i < combination.size() - 1; i++) {
         for (j = i + 1; j < combination.size(); j++) {
           // System.out.println(i);
@@ -106,15 +118,24 @@ public class LineSegment {
   }
 
   public void print() {
-    System.out.println("%%%%%%%%%%%%%");
+    System.out.println("#####");
+    // System.out.print("start x: ");
+    // System.out.println(start.x );
+    // System.out.print("start y: ");
+    // System.out.println(start.y);
+    // System.out.print("end x: ");
+    // System.out.println(end.x);
+    // System.out.print("end y: ");
+    // System.out.println(end.y);
+
     System.out.print("start x: ");
-    System.out.println(start.x);
+    System.out.println((start.x - 36.7) * 100);
     System.out.print("start y: ");
-    System.out.println(start.y);
+    System.out.println((start.y + 4.43) * -100);
     System.out.print("end x: ");
-    System.out.println(end.x);
+    System.out.println((end.x - 36.7) * 100);
     System.out.print("end y: ");
-    System.out.println(end.y);
+    System.out.println((end.y + 4.43) * -100);
   }
 
   public static ArrayList<LineSegment> combineTwoSegments(LineSegment segment1, LineSegment segment2) {
@@ -159,7 +180,7 @@ public class LineSegment {
 
   public LineSegment subSegment(double new_module) {
 
-    double module = Math.sqrt(Math.pow(end.y - start.y, 2) + Math.pow(end.x - start.x, 2));
+    double module = Point.twoPointsDistance(start, end);
     double percentage = new_module / module;
     // System.out.print("New Module: ");
     // System.out.println(new_module);
