@@ -2,11 +2,11 @@
 # Makefile created by Jeff Bassett, with some
 # tweaks by Sean Luke
 #
-# To compile everything but GUI:	make 
+# To compile everything but GUI:	make
 # To delete class files:		make clean
 # To build the documentation:		make docs
 # To auto-indent using Emacs:		make indent
-# To build everything + GUI:		make gui 
+# To build everything + GUI:		make gui
 # To build everything + Push:		make push
 #	(requires JFreeChart: www.jfree.org/jfreechart/)
 #	(requires iText: www.lowagie.com/iText/)
@@ -23,48 +23,6 @@ VERSION = 22
 
 DIRS = \
 ec/*.java \
-ec/app/ant/*.java \
-ec/app/ant/func/*.java \
-ec/app/bbob/*.java \
-ec/app/ecsuite/*.java \
-ec/app/edge/*.java \
-ec/app/edge/func/*.java \
-ec/app/gpsemantics/*.java \
-ec/app/gpsemantics/func/*.java \
-ec/app/hiff/*.java \
-ec/app/klandscapes/*.java \
-ec/app/klandscapes/func/*.java \
-ec/app/lawnmower/*.java \
-ec/app/lawnmower/func/*.java \
-ec/app/lid/*.java \
-ec/app/lid/func/*.java \
-ec/app/majority/*.java \
-ec/app/majority/func/*.java \
-ec/app/mona/*.java \
-ec/app/moosuite/*.java \
-ec/app/multiplexer/*.java \
-ec/app/multiplexer/func/*.java \
-ec/app/multiplexerslow/*.java \
-ec/app/multiplexerslow/func/*.java \
-ec/app/nk/*.java \
-ec/app/ordertree/*.java \
-ec/app/ordertree/func/*.java \
-ec/app/parity/*.java \
-ec/app/parity/func/*.java \
-ec/app/regression/*.java \
-ec/app/regression/func/*.java \
-ec/app/royaltree/*.java \
-ec/app/royaltree/func/*.java \
-ec/app/sat/*.java \
-ec/app/sum/*.java \
-ec/app/tutorial1/*.java \
-ec/app/tutorial2/*.java \
-ec/app/tutorial3/*.java \
-ec/app/tutorial4/*.java \
-ec/app/coevolve1/*.java \
-ec/app/coevolve2/*.java \
-ec/app/twobox/*.java \
-ec/app/twobox/func/*.java \
 ec/breed/*.java \
 ec/coevolve/*.java \
 ec/de/*.java \
@@ -131,11 +89,11 @@ dist: clean gui push indent doc jar
 	echo --------------------------
 	find . -name ".svn" -exec rm -rf {} \; -print | cat
 
-indent: 
+indent:
 	@ echo This uses emacs to indent all of the code.  To indent with
 	@ echo "ECJ's default indent style, create a .emacs file in your home"
 	@ echo "directory, with the line:    (setq c-default-style \"whitesmith\")"
-	@ echo and run make indent.  To indent with BSD/Allman style, use 
+	@ echo and run make indent.  To indent with BSD/Allman style, use
 	@ echo "the line:    (setq c-default-style \"bsd\")"
 	@ echo
 	touch ${HOME}/.emacs
@@ -150,14 +108,14 @@ jar: all
 	touch /tmp/manifest.add
 	rm /tmp/manifest.add
 	echo "Main-Class: ec.Evolve" > /tmp/manifest.add
-	jar -cvfm jar/ecj.${VERSION}.jar /tmp/manifest.add `find ec -name "*.class"` `find ec -name "*.params"` `find ec -name "*.trl"` `find ec -name "*.out.gz"` `find ec -name "*.grammar"` `find ec -name "*.cnf"` 
+	jar -cvfm jar/ecj.${VERSION}.jar /tmp/manifest.add `find ec -name "*.class"` `find ec -name "*.params"` `find ec -name "*.trl"` `find ec -name "*.out.gz"` `find ec -name "*.grammar"` `find ec -name "*.cnf"`
 
 
 
 # Print a help message
-help: 
+help:
 	@ echo ECJ Makefile options
-	@ echo 
+	@ echo
 	@ echo "make          Builds the ECJ code using the default compiler"
 	@ echo "make all	(Same thing)"
 	@ echo "make docs     Builds the class documentation, found in docs/classsdocs"
