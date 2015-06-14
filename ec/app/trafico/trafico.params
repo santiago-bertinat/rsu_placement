@@ -5,7 +5,7 @@ eval.problem = ec.app.trafico.Trafico
 
 # Defino las variables generales al problema
 pop.subpop.0.size =                     80
-generations =                           10001
+generations =                           1001
 
 # Hilos y semillas
 seed.0 = time
@@ -15,7 +15,7 @@ seed.0 = time
 pop.subpop.0.species = ec.vector.FloatVectorSpecies
 pop.subpop.0.species.ind = ec.vector.FloatVectorIndividual
 # pop.subpop.0.species.genome-size	= 125
-pop.subpop.0.species.genome-size      = 5
+pop.subpop.0.species.genome-size  = 5
 pop.subpop.0.species.min-gene	= 0
 pop.subpop.0.species.max-gene 	= 3.999999999999999999
 
@@ -59,11 +59,11 @@ stat.modulo.front = 5
 stat.solution.file=$solution.stat
 
 #Numero de ejecuciones
-jobs = 30
+jobs = 1
 
 #Ruta a archivo de coordenadas
 pop.subpop.0.species.ruta-coordenadas = coordenadas.txt
-pop.subpop.0.species.ruta-adyacencias = instancias/normal.txt
+pop.subpop.0.species.ruta-adyacencias = instancias/5_segmentos.txt
 pop.subpop.0.species.ruta-antenas = antenas.txt
 pop.subpop.0.species.numero-puntos = 121
 

@@ -23,19 +23,19 @@ public class LineSegment {
       return 0;
     }
 
-    System.out.print("a: ");
-    System.out.println(a);
-    System.out.print("b: ");
-    System.out.println(b);
-    System.out.print("c: ");
-    System.out.println(c);
+    // System.out.print("a: ");
+    // System.out.println(a);
+    // System.out.print("b: ");
+    // System.out.println(b);
+    // System.out.print("c: ");
+    // System.out.println(c);
     double cosine = (c*c - a*a - b*b) / (-2 * a * b);
-    if (cosine > 1) {
+    if (cosine > 1 || cosine < -1) {
       return 0;
     }
-    System.out.print("cosine: ");
-    System.out.println(cosine);
-    System.out.println(Math.acos(cosine));
+    // System.out.print("cosine: ");
+    // System.out.println(cosine);
+    // System.out.println(Math.acos(cosine));
     return Math.acos(cosine);
   }
 

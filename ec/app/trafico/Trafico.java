@@ -81,10 +81,10 @@ public class Trafico extends Problem implements SimpleProblemForm {
 
                 Point center = new Point(centro[0], centro[1]);
                 double radio_circulo = t_spe.getRadioAntena()[tipo_infraestructura];
-                // System.out.println("Circle");
-                // System.out.println((center.x - 36.7) * 100);
-                // System.out.println((center.y + 4.43) * -100);
-                // System.out.println(radio_circulo);
+                System.out.println("Circle");
+                System.out.println(center.x);
+                System.out.println(center.y);
+                System.out.println(radio_circulo);
                 road_side_units.add(new Circle(center, radio_circulo));
             }
         }
@@ -102,7 +102,7 @@ public class Trafico extends Problem implements SimpleProblemForm {
                 LineSegment segment = new LineSegment(new Point(start_x, start_y), new Point(end_x, end_y));
                 ArrayList<LineSegment> intersections = new ArrayList<LineSegment>();
 
-                // System.out.println("SEGMENT");
+                System.out.println("SEGMENT");
                 segment.print();
 
 
@@ -134,19 +134,15 @@ public class Trafico extends Problem implements SimpleProblemForm {
                   coverered_distance += Point.twoPointsDistance(combination.start, combination.end);
                 }
 
-                double total_distance = Point.twoPointsDistance(segment.start, segment.end);
-                double coverage = total_distance / coverered_distance;
-
-
-                // System.out.print("total_distance:");
-                // System.out.println(total_distance);
-                // System.out.print("coverered_distance:");
-                // System.out.println(coverered_distance);
+                System.out.print("total_distance:");
+                System.out.println(Point.twoPointsDistance(segment.start, segment.end));
+                System.out.print("coverered_distance:");
+                System.out.println(coverered_distance);
                 // System.out.print("Segment:");
                 // System.out.println(i);
                 // System.out.print("Coverage:");
                 // System.out.println(coverage);
-                qos += t_spe.getCantidadVehiculosSegmento()[i] * (coverage)/(double)(t_spe.getVelocidadSegmento()[i]*1000);
+                qos += t_spe.getCantidadVehiculosSegmento()[i] * (coverered_distance)/(double)(t_spe.getVelocidadSegmento()[i]*1000);
             }
         }
 
