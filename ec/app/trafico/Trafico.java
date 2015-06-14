@@ -100,48 +100,48 @@ public class Trafico extends Problem implements SimpleProblemForm {
                 double end_y = t_spe.getLongitudes()[t_spe.getPtoFinalSegmento()[i]];
 
                 LineSegment segment = new LineSegment(new Point(start_x, start_y), new Point(end_x, end_y));
-                ArrayList<LineSegment> intersections = new ArrayList<LineSegment>();
+                double segment_length = Point.twoPointsDistance(segment.start, segment.end);
+                double divitions = 10;
+                double module_section = segment_length / divitions;
+                double intersections = 0;
+
+                double coverered_distance = 0;
 
                 System.out.println("SEGMENT");
                 segment.print();
 
+                double x_length = Math.abs(segment.start.x - segment.end.x) / divitions;
+                double y_length = Math.abs(segment.start.y - segment.end.y) / divitions;
 
-                // System.out.println("####");
-                // System.out.println("Intersecion");
-                for (Circle rsu : road_side_units) {
-                  LineSegment intersection = rsu.lineIntersection(segment);
-                  if (intersection != null) {
-                    // intersection.print();
-                    // System.out.println("####");
-                    intersections.add(intersection);
-                  }
+                for (int j = 0; j < divitions; j++) {
+                    double x = segment.start.x;
+                    if (segment.start.x < segment.end.x) {
+                        x = segment.start.x + j * x_length;
+                    }else if (segment.start.x > segment.end.x) {
+                        x = segment.start.x - j * x_length;
+                    }
+
+                    double y = segment.start.y;
+                    if (segment.start.y < segment.end.y) {
+                        y = segment.start.y + j * y_length;
+                    }else if (segment.start.y > segment.end.y) {
+                        y = segment.start.y - j * y_length;
+                    }
+
+                    Point aux_point = new Point(x, y);
+                    for (Circle rsu : road_side_units) {
+                        if (rsu.belongsToCircle(aux_point)) {
+                            intersections++;
+                            break;
+                        }
+                    }
                 }
 
-                ArrayList<LineSegment> combinations;
-                if (intersections.size() > 1) {
-                    combinations = LineSegment.combineSegments(intersections);
-                } else {
-                    combinations = intersections;
-                }
-
-
-                // System.out.println("####");
-                // System.out.println("Combination");
-                double coverered_distance = 0;
-                for (LineSegment combination : combinations) {
-                  // combination.print();
-                  // System.out.println("####");
-                  coverered_distance += Point.twoPointsDistance(combination.start, combination.end);
-                }
-
+                coverered_distance = intersections * module_section;
                 System.out.print("total_distance:");
                 System.out.println(Point.twoPointsDistance(segment.start, segment.end));
                 System.out.print("coverered_distance:");
                 System.out.println(coverered_distance);
-                // System.out.print("Segment:");
-                // System.out.println(i);
-                // System.out.print("Coverage:");
-                // System.out.println(coverage);
                 qos += t_spe.getCantidadVehiculosSegmento()[i] * (coverered_distance)/(double)(t_spe.getVelocidadSegmento()[i]*1000);
             }
         }

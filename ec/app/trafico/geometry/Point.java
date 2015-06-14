@@ -14,9 +14,5 @@ public class Point {
     double x = point1.x - point2.x;
     double y = (point1.y - point2.y) * Math.cos(point1.x);
     return deglen * Math.sqrt(x * x + y * y);
-
-    // double x = point2.x - point1.x;
-    // double y = point2.y - point1.y;
-    // return Math.sqrt(x * x + y * y);
   }
 }
