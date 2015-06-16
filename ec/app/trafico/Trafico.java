@@ -26,7 +26,7 @@ public class Trafico extends Problem implements SimpleProblemForm {
 
 
     public void evaluate(final EvolutionState state, final Individual ind, final int subpopulation, final int threadnum) {
-        System.out.println("Evaluate");
+        //System.out.println("Evaluate");
         if( !( ind instanceof FloatVectorIndividual ) )
             state.output.fatal( "The individuals for this problem should be FloatVectorIndividuals." );
 
@@ -68,10 +68,10 @@ public class Trafico extends Problem implements SimpleProblemForm {
 
         ArrayList<Circle> road_side_units = new ArrayList<Circle>();
 
-        for (int i = 0; i < t_ind.genome.length; i++){
+        //for (int i = 0; i < t_ind.genome.length; i++){
             // System.out.print(t_ind.genome[i]);
             // System.out.println(",");
-        }
+        //}
         // Create RSU's
         for (int i = 0; i < t_ind.genome.length; i++){
             int tipo_infraestructura = (int)Math.floor(t_ind.genome[i]);
@@ -81,10 +81,10 @@ public class Trafico extends Problem implements SimpleProblemForm {
 
                 Point center = new Point(centro[0], centro[1]);
                 double radio_circulo = t_spe.getRadioAntena()[tipo_infraestructura];
-                System.out.println("Circle");
+                /*System.out.println("Circle");
                 System.out.println(center.x);
                 System.out.println(center.y);
-                System.out.println(radio_circulo);
+                System.out.println(radio_circulo);*/
                 road_side_units.add(new Circle(center, radio_circulo));
             }
         }
@@ -101,14 +101,14 @@ public class Trafico extends Problem implements SimpleProblemForm {
 
                 LineSegment segment = new LineSegment(new Point(start_x, start_y), new Point(end_x, end_y));
                 double segment_length = Point.twoPointsDistance(segment.start, segment.end);
-                double divitions = 10;
+                double divitions = 1000;
                 double module_section = segment_length / divitions;
                 double intersections = 0;
 
                 double coverered_distance = 0;
 
-                System.out.println("SEGMENT");
-                segment.print();
+                //System.out.println("SEGMENT");
+                //segment.print();
 
                 double x_length = Math.abs(segment.start.x - segment.end.x) / divitions;
                 double y_length = Math.abs(segment.start.y - segment.end.y) / divitions;
@@ -138,16 +138,16 @@ public class Trafico extends Problem implements SimpleProblemForm {
                 }
 
                 coverered_distance = intersections * module_section;
-                System.out.print("total_distance:");
+                /*System.out.print("total_distance:");
                 System.out.println(Point.twoPointsDistance(segment.start, segment.end));
                 System.out.print("coverered_distance:");
-                System.out.println(coverered_distance);
+                System.out.println(coverered_distance);*/
                 qos += t_spe.getCantidadVehiculosSegmento()[i] * (coverered_distance)/(double)(t_spe.getVelocidadSegmento()[i]*1000);
             }
         }
 
-        System.out.print("QoS:");
-        System.out.println(qos);
+        //System.out.print("QoS:");
+        //System.out.println(qos);
         return qos;
     }
 
