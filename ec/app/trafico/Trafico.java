@@ -101,7 +101,7 @@ public class Trafico extends Problem implements SimpleProblemForm {
 
                 LineSegment segment = new LineSegment(new Point(start_x, start_y), new Point(end_x, end_y));
                 double segment_length = Point.twoPointsDistance(segment.start, segment.end);
-                double divitions = 1000;
+                double divitions = 100;
                 double module_section = segment_length / divitions;
                 double intersections = 0;
 
@@ -112,6 +112,9 @@ public class Trafico extends Problem implements SimpleProblemForm {
 
                 double x_length = Math.abs(segment.start.x - segment.end.x) / divitions;
                 double y_length = Math.abs(segment.start.y - segment.end.y) / divitions;
+
+
+				Circle rsu_anterior=null;
 
                 for (int j = 0; j < divitions; j++) {
                     double x = segment.start.x;
@@ -128,13 +131,22 @@ public class Trafico extends Problem implements SimpleProblemForm {
                         y = segment.start.y - j * y_length;
                     }
 
+
                     Point aux_point = new Point(x, y);
-                    for (Circle rsu : road_side_units) {
-                        if (rsu.belongsToCircle(aux_point)) {
-                            intersections++;
-                            break;
-                        }
+
+                    if(rsu_anterior!=null && rsu_anterior.belongsToCircle(aux_point)) {
+	                        intersections++;
                     }
+                    else{
+
+	                    for (Circle rsu : road_side_units) {
+	                        if (rsu.belongsToCircle(aux_point)) {
+	                            intersections++;
+	                            rsu_anterior=rsu;
+	                            break;
+	                        }
+	                    }
+	                }
                 }
 
                 coverered_distance = intersections * module_section;
