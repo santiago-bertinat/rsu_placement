@@ -4,36 +4,13 @@ parent.0 = ../../multiobjective/nsga2/nsga2.params
 eval.problem = ec.app.trafico.Trafico
 
 # Defino las variables generales al problema
-pop.subpop.0.size =                     80
-generations =                           10001
+pop.subpop.0.size =                     72
+generations =                           101
 
 # Hilos y semillas
-pop.subpop.0.evalthreads =24
-pop.subpop.0.breedthreads =24
+pop.subpop.0.evalthreads =1
+pop.subpop.0.breedthreads =1
 seed.0 = time
-seed.1 = time
-seed.2 = time
-seed.3 = time
-seed.4 = time
-seed.5 = time
-seed.6 = time
-seed.7 = time
-seed.8 = time
-seed.9 = time
-seed.10 = time
-seed.11 = time
-seed.12 = time
-seed.13 = time
-seed.14 = time
-seed.15 = time
-seed.16 = time
-seed.17 = time
-seed.18 = time
-seed.19 = time
-seed.20 = time
-seed.21 = time
-seed.22 = time
-seed.23 = time
 
 
 
@@ -80,15 +57,16 @@ select.tournament.size 				= 2
 
 #Estadisticas
 stat.silent.print = true
-stat.modulo.front = 5
+stat.modulo.front = 5000
 #silent = true
 stat.solution.file=$solution.stat
 
 #Numero de ejecuciones
-jobs = 30
+jobs = 1
 
 #Ruta a archivo de coordenadas
 pop.subpop.0.species.ruta-coordenadas = coordenadas.txt
+pop.subpop.0.species.ruta-res-greedys = instancias/res_greedy_normal.txt
 pop.subpop.0.species.ruta-adyacencias = instancias/normal.txt
 pop.subpop.0.species.ruta-antenas = antenas.txt
 pop.subpop.0.species.numero-puntos = 121

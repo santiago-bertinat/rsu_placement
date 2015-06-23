@@ -165,6 +165,7 @@ public class FloatVectorSpecies extends VectorSpecies
     public final static String P_MUT_CAMBIAR_A_CERO= "prob-mut-cambiar-a-cero";
     public final static String P_MUT_CAMBIAR_ANTENA= "prob-mut-cambiar-antena";
     public final static String P_MUT_CAMBIAR_GAUSSIANA= "prob-mut-cambiar-gaussiana";
+    public final static String P_RUTA_RES_GREEDY = "ruta-res-greedys";
 
     public final static String P_RUTA_A_COORDENADAS = "ruta-coordenadas";
     public final static String P_RUTA_A_ADYACENCIAS = "ruta-adyacencias";
@@ -300,6 +301,11 @@ public class FloatVectorSpecies extends VectorSpecies
     protected float p_mut_cambiar_antena;
     protected float p_mut_cambiar_gaussiana;
     protected int inicializacion_especial;
+    protected float [][] resultados_greedys;
+
+    public float [][] getResultadosGreedys(){
+        return resultados_greedys;
+    }
 
     public int getInicializacionEspecial(){
         return inicializacion_especial;
@@ -455,7 +461,7 @@ public class FloatVectorSpecies extends VectorSpecies
         setupGenome(state, base);
 
         //Inicializo la variable de inicializaciones especiales
-        inicializacion_especial=3;
+        inicializacion_especial=18;
 
         // OUT OF BOUNDS RETRIES
 
@@ -508,6 +514,9 @@ public class FloatVectorSpecies extends VectorSpecies
         potencia_antena=new float[(int)Math.round(maxGene[0])];
         precio_antena=new float[(int)Math.round(maxGene[0])];
         radio_antena=new float[(int)Math.round(maxGene[0])];
+        resultados_greedys = new float[18][];
+        for (int i=0;i<18; i++)
+            resultados_greedys[i]=new float[genomeSize];
 
         try{
             //Cargo las coordenadas
@@ -563,6 +572,21 @@ public class FloatVectorSpecies extends VectorSpecies
                 potencia_antena[i]=Float.parseFloat(line_tokens[1]);
                 precio_antena[i]=Float.parseFloat(line_tokens[2]);
                 radio_antena[i]=Float.parseFloat(line_tokens[3]);
+            }
+            br.close();
+
+            //Cargo los greedys
+            String ruta_greedys=state.parameters.getStringWithDefault(base.push(P_RUTA_RES_GREEDY), def.push(P_RUTA_RES_GREEDY), null);
+            fin = new File(ruta_greedys);
+            fis = new FileInputStream(fin);
+            br = new BufferedReader(new InputStreamReader(fis));
+            line=null;
+            line_tokens=null;
+            for (int i=0;i<18;i++){
+                line = br.readLine();
+                line_tokens = line.split(",");
+                for (int j=0; j<genomeSize; j++)
+                    resultados_greedys[i][j]=Float.parseFloat(line_tokens[j]);
             }
             br.close();
 
