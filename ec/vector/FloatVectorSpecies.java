@@ -18,7 +18,7 @@ import java.io.IOException;
 
 /**
  * FloatVectorSpecies is a subclass of VectorSpecies with special
- * constraints for floating-point vectors, namely FloatVectorIndividual and
+ * constraints for doubleing-point vectors, namely FloatVectorIndividual and
  * DoubleVectorIndividual.
  *
  * <p>FloatVectorSpecies can specify a number of parameters globally, per-segment, and per-gene.
@@ -287,19 +287,19 @@ public class FloatVectorSpecies extends VectorSpecies
 
     //Defino variables globales para toda la especie
     protected int numero_de_puntos;
-    protected float [] latitudes;
-    protected float [] longitudes;
+    protected double [] latitudes;
+    protected double [] longitudes;
     protected int [] pto_inicial_segmento;
     protected int [] pto_final_segmento;
     protected int [] cantidad_vehiculos_segmento;
     protected int [] velocidad_segmento;
-    protected float [] precio_antena;
-    protected float [] radio_antena;
-    protected float [] potencia_antena;
-    protected float [] dbi_antena;
-    protected float p_mut_cambiar_a_cero;
-    protected float p_mut_cambiar_antena;
-    protected float p_mut_cambiar_gaussiana;
+    protected double [] precio_antena;
+    protected double [] radio_antena;
+    protected double [] potencia_antena;
+    protected double [] dbi_antena;
+    protected double p_mut_cambiar_a_cero;
+    protected double p_mut_cambiar_antena;
+    protected double p_mut_cambiar_gaussiana;
     protected int inicializacion_especial;
     protected float [][] resultados_greedys;
 
@@ -315,15 +315,15 @@ public class FloatVectorSpecies extends VectorSpecies
         inicializacion_especial--;
     }
 
-    public float getPMutCambiarACero(){
+    public double getPMutCambiarACero(){
         return p_mut_cambiar_a_cero;
     }
 
-    public float getPMutCambiarAntena(){
+    public double getPMutCambiarAntena(){
         return p_mut_cambiar_antena;
     }
 
-    public float getPMutCambiarGaussiana(){
+    public double getPMutCambiarGaussiana(){
         return p_mut_cambiar_gaussiana;
     }
 
@@ -331,11 +331,11 @@ public class FloatVectorSpecies extends VectorSpecies
         return numero_de_puntos;
     }
 
-    public float [] getLatitudes(){
+    public double [] getLatitudes(){
         return latitudes;
     }
 
-    public float[] getLongitudes(){
+    public double[] getLongitudes(){
         return longitudes;
     }
 
@@ -355,20 +355,20 @@ public class FloatVectorSpecies extends VectorSpecies
         return velocidad_segmento;
     }
 
-    public float [] getPrecioAntena(){
+    public double [] getPrecioAntena(){
         return precio_antena;
     }
 
 
-    public float [] getRadioAntena(){
+    public double [] getRadioAntena(){
         return radio_antena;
     }
 
-    public float [] getPotenciaAntena(){
+    public double [] getPotenciaAntena(){
         return potencia_antena;
     }
 
-    public float [] getDbiAntena(){
+    public double [] getDbiAntena(){
         return dbi_antena;
     }
 
@@ -461,7 +461,7 @@ public class FloatVectorSpecies extends VectorSpecies
         setupGenome(state, base);
 
         //Inicializo la variable de inicializaciones especiales
-        inicializacion_especial=18;
+        inicializacion_especial=17;
 
         // OUT OF BOUNDS RETRIES
 
@@ -504,18 +504,18 @@ public class FloatVectorSpecies extends VectorSpecies
         numero_de_puntos = state.parameters.getIntWithDefault(base.push(P_NROPUNTOS),def.push(P_NROPUNTOS),0);
 
         //Pido memoria para las estructuras
-        latitudes= new float[numero_de_puntos];
-        longitudes= new float[numero_de_puntos];
+        latitudes= new double[numero_de_puntos];
+        longitudes= new double[numero_de_puntos];
         pto_inicial_segmento = new int [genomeSize];
         pto_final_segmento = new int [genomeSize];
         cantidad_vehiculos_segmento=new int [genomeSize];
         velocidad_segmento=new int [genomeSize];
-        dbi_antena=new float[(int)Math.round(maxGene[0])];
-        potencia_antena=new float[(int)Math.round(maxGene[0])];
-        precio_antena=new float[(int)Math.round(maxGene[0])];
-        radio_antena=new float[(int)Math.round(maxGene[0])];
-        resultados_greedys = new float[18][];
-        for (int i=0;i<18; i++)
+        dbi_antena=new double[(int)Math.round(maxGene[0])];
+        potencia_antena=new double[(int)Math.round(maxGene[0])];
+        precio_antena=new double[(int)Math.round(maxGene[0])];
+        radio_antena=new double[(int)Math.round(maxGene[0])];
+        resultados_greedys = new float[17][];
+        for (int i=0;i<17; i++)
             resultados_greedys[i]=new float[genomeSize];
 
         try{
@@ -531,8 +531,8 @@ public class FloatVectorSpecies extends VectorSpecies
             String [] line_tokens=null;
             for (line=br.readLine(); line!=null; line=br.readLine()){
                 line_tokens = line.split(" ");
-                latitudes[Integer.parseInt(line_tokens[0])]=Float.parseFloat(line_tokens[1]);
-                longitudes[Integer.parseInt(line_tokens[0])]=Float.parseFloat(line_tokens[2]);
+                latitudes[Integer.parseInt(line_tokens[0])]=Double.parseDouble(line_tokens[1]);
+                longitudes[Integer.parseInt(line_tokens[0])]=Double.parseDouble(line_tokens[2]);
             }
             br.close();
 
@@ -550,6 +550,7 @@ public class FloatVectorSpecies extends VectorSpecies
                 pto_final_segmento[i]=Integer.parseInt(line_tokens[1]);
                 cantidad_vehiculos_segmento[i]=Integer.parseInt(line_tokens[2]);
                 velocidad_segmento[i]=Integer.parseInt(line_tokens[3]);
+
             }
             br.close();
 
@@ -568,10 +569,10 @@ public class FloatVectorSpecies extends VectorSpecies
             for (int i=1;i<Math.round(maxGene[0]);i++){
                 line = br.readLine();
                 line_tokens = line.split(" ");
-                dbi_antena[i]=Float.parseFloat(line_tokens[0]);
-                potencia_antena[i]=Float.parseFloat(line_tokens[1]);
-                precio_antena[i]=Float.parseFloat(line_tokens[2]);
-                radio_antena[i]=Float.parseFloat(line_tokens[3]);
+                dbi_antena[i]=Double.parseDouble(line_tokens[0]);
+                potencia_antena[i]=Double.parseDouble(line_tokens[1]);
+                precio_antena[i]=Double.parseDouble(line_tokens[2]);
+                radio_antena[i]=Double.parseDouble(line_tokens[3]);
             }
             br.close();
 
@@ -582,7 +583,8 @@ public class FloatVectorSpecies extends VectorSpecies
             br = new BufferedReader(new InputStreamReader(fis));
             line=null;
             line_tokens=null;
-            for (int i=0;i<18;i++){
+            for (int i=0;i<17;i++){
+                System.out.println(i);
                 line = br.readLine();
                 line_tokens = line.split(",");
                 for (int j=0; j<genomeSize; j++)

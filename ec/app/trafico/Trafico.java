@@ -41,6 +41,9 @@ public class Trafico extends Problem implements SimpleProblemForm {
 
         ((MultiObjectiveFitness)ind.fitness).setObjectives(state, objectives);
         ind.evaluated = true;
+
+        System.out.println("Evalue: " + objectives[0] + " " +  objectives[1]);
+        System.out.println("---------------------------------------------------");
         // System.out.println("Finish evaluate");
     }
 
@@ -62,9 +65,22 @@ public class Trafico extends Problem implements SimpleProblemForm {
 
     public double qos (Individual ind){
         // System.out.println("QoS");
+        boolean debug;
         FloatVectorIndividual t_ind = (FloatVectorIndividual)ind;
         FloatVectorSpecies t_spe = (FloatVectorSpecies)ind.species;
         double qos = 0;
+
+        int n=0;
+        float [] resultado_greedy=t_spe.getResultadosGreedys()[16];
+        while (n<t_ind.genome.length && t_ind.genome[n]==resultado_greedy[n])
+            n++;
+        // if (n==t_ind.genome.length){
+        //     debug=true;
+        //     System.out.println("DEBUG ES TRUEEE!!!!");
+        // }
+        // else
+        //     debug=false;
+
 
         ArrayList<Circle> road_side_units = new ArrayList<Circle>();
 
@@ -101,7 +117,7 @@ public class Trafico extends Problem implements SimpleProblemForm {
 
                 LineSegment segment = new LineSegment(new Point(start_x, start_y), new Point(end_x, end_y));
                 double segment_length = Point.twoPointsDistance(segment.start, segment.end);
-                double divitions = 100;
+                double divitions = 10;
                 double module_section = segment_length / divitions;
                 double intersections = 0;
 
@@ -155,7 +171,15 @@ public class Trafico extends Problem implements SimpleProblemForm {
                 System.out.print("coverered_distance:");
                 System.out.println(coverered_distance);*/
                 qos += t_spe.getCantidadVehiculosSegmento()[i] * (coverered_distance)/(double)(t_spe.getVelocidadSegmento()[i]*1000);
+                /*System.out.println("######");
+                System.out.println("ID: "+i);
+                System.out.println("Largo: "+ segment_length);
+                System.out.println("Velocidad: "+ t_spe.getVelocidadSegmento()[i]);
+                System.out.println("Vehículos: "+ t_spe.getCantidadVehiculosSegmento()[i]);
+                System.out.println("######");*/
+                
             }
+            //System.out.println("-----------------------------------------------------------------");
         }
 
         //System.out.print("QoS:");

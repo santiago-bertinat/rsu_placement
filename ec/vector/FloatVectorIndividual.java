@@ -604,18 +604,18 @@ public class FloatVectorIndividual extends VectorIndividual
 
         int ini_especial=s.getInicializacionEspecial();
 
-        if (ini_especial==3){
-        	//Inicializo tupla llena de ceros
+
+        if (ini_especial>0){
+            for (int x = 0; x < genome.length; x++)
+                genome[x]=s.getResultadosGreedys()[ini_especial-1][x];
+            s.decreaseInicializacionEspecial();
+        }
+        else if (ini_especial==0){
+        	//Inicializo tupla con la solucion de greedy
         	for (int x = 0; x < genome.length; x++)
         		genome[x]=(float)0.0;
         	s.decreaseInicializacionEspecial();
         }
-        // else if (ini_especial==2){
-        // 	//Inicializo con greedy cobertura
-        // }
-        // else if (ini_especial==1){
-        // 	//Inicializo con greedy costo
-        // }
         else{
         	//Inicializo random
         	MersenneTwisterFast random = state.random[thread];
