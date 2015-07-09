@@ -1,0 +1,64 @@
+parent.0 = ../../multiobjective/nsga2/nsga2.params
+
+# Defino el problema
+eval.problem = ec.app.rsu_placement.RsuPlacement
+
+# Defino las variables generales al problema
+pop.subpop.0.size = 80
+generations = 21
+
+seed.0 = time
+
+# Defino la representacion
+pop.subpop.0.species = ec.vector.FloatVectorSpecies
+pop.subpop.0.species.ind = ec.vector.FloatVectorIndividual
+pop.subpop.0.species.genome-size = 119
+pop.subpop.0.species.min-gene	= 0
+pop.subpop.0.species.max-gene = 3.999999999999999999
+
+# Two objectives
+pop.subpop.0.species.fitness.num-objectives = 2
+pop.subpop.0.species.fitness.maximize.0 = false
+pop.subpop.0.species.fitness.maximize.1 = true
+
+# Intermediate crossover
+pop.subpop.0.species.crossover-type	= intermediate
+pop.subpop.0.species.line-extension = 0.25
+
+# Gaussian mutation
+change-to-cero-mut-prob = 0.5
+change-rsu-prob-mut = 0.25
+gaussian-noice-mut-prob = 0.25
+
+pop.subpop.0.species.mutation-type  = gauss
+pop.subpop.0.species.mutation-stdev = 0.25
+pop.subpop.0.species.mutation-bounded = true
+pop.subpop.0.species.out-of-bounds-retries = 20
+pop.subpop.0.species.mutation-prob = 0.1
+
+
+pop.subpop.0.species.pipe	= ec.vector.breed.VectorMutationPipeline
+pop.subpop.0.species.pipe.likelihood = 0.01
+
+pop.subpop.0.species.pipe.source.0 = ec.vector.breed.VectorCrossoverPipeline
+pop.subpop.0.species.pipe.source.0.likelihood = 0.95
+pop.subpop.0.species.pipe.source.0.source.0 = ec.select.TournamentSelection
+pop.subpop.0.species.pipe.source.0.source.1 = same
+select.tournament.size = 2
+
+
+# Stats
+stat.silent.print = true
+stat.modulo.front = 5
+# silent = true
+stat.solution.file = $solution.stat
+
+# Number of executions
+jobs = 1
+
+# Instance paths
+pop.subpop.0.species.segments-path = instances/montevideo.txt
+pop.subpop.0.species.rsu-types-path = rsu_types.txt
+pop.subpop.0.species.greedys-res-path = instances/greedy_results.txt
+
+
