@@ -11,9 +11,9 @@ import ec.vector.*;
 import ec.*;
 import ec.util.*;
 
-/* 
+/*
  * VectorMutationPipeline.java
- * 
+ *
  * Created: Tue Mar 13 15:03:12 EST 2001
  * By: Sean Luke
  */
@@ -22,10 +22,10 @@ import ec.util.*;
 /**
  *
  VectorMutationPipeline is a BreedingPipeline which implements a simple default Mutation
- for VectorIndividuals.  Normally it takes an individual and returns a mutated 
- child individual. VectorMutationPipeline works by calling defaultMutate(...) on the 
+ for VectorIndividuals.  Normally it takes an individual and returns a mutated
+ child individual. VectorMutationPipeline works by calling defaultMutate(...) on the
  parent individual.
- 
+
  <p><b>Typical Number of Individuals Produced Per <tt>produce(...)</tt> call</b><br>
  (however many its source produces)
 
@@ -45,17 +45,17 @@ public class VectorMutationPipeline extends BreedingPipeline
     public static final int NUM_SOURCES = 1;
 
     public Parameter defaultBase() { return VectorDefaults.base().push(P_MUTATION); }
-    
+
     /** Returns 1 */
     public int numSources() { return NUM_SOURCES; }
 
-    public int produce(final int min, 
-        final int max, 
+    public int produce(final int min,
+        final int max,
         final int start,
         final int subpopulation,
         final Individual[] inds,
         final EvolutionState state,
-        final int thread) 
+        final int thread)
         {
         // grab individuals from our source and stick 'em right into inds.
         // we'll modify them from there
@@ -81,5 +81,5 @@ public class VectorMutationPipeline extends BreedingPipeline
         }
 
     }
-    
-    
+
+

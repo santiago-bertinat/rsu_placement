@@ -39,9 +39,10 @@ public class RsuPlacement extends Problem implements SimpleProblemForm {
 
         FloatVectorIndividual t_ind = (FloatVectorIndividual)ind;
 
-        // for (int i = 0; i < t_ind.genome.length; i++){
-        //     System.out.println(t_ind.genome[i]);
-        // }
+        for (int i = 0; i < t_ind.genome.length; i++){
+            System.out.print(t_ind.genome[i] + ",");
+        }
+        System.out.println();
 
         System.out.println("RESULT");
         System.out.println(objectives[0] + " " + objectives[1]);
@@ -84,11 +85,11 @@ public class RsuPlacement extends Problem implements SimpleProblemForm {
             }
         }
 
-        double ideal = 0;
-        for (Segment segment : t_spe.getSegments()) {
-            ideal += segment.distance() * segment.importance;
-        }
-        System.out.println("IDEAL:" + ideal);
+        // double ideal = 0;
+        // for (Segment segment : t_spe.getSegments()) {
+        //     ideal += segment.distance() * segment.importance;
+        // }
+        // // System.out.println("IDEAL:" + ideal);
 
         // Iterate through the segments
         if (road_side_units.size() > 0) {
@@ -107,6 +108,7 @@ public class RsuPlacement extends Problem implements SimpleProblemForm {
                 double x_length = Math.abs(segment.start.x - segment.end.x) / divitions;
                 double y_length = Math.abs(segment.start.y - segment.end.y) / divitions;
 
+                Rsu previous_rsu = null;
                 for (int j = 0; j < divitions; j++) {
                     double x = segment.start.x;
                     if (segment.start.x < segment.end.x) {
@@ -124,10 +126,15 @@ public class RsuPlacement extends Problem implements SimpleProblemForm {
 
 
                     Point aux_point = new Point(x, y);
-                    for (Rsu rsu : road_side_units) {
-                        if (rsu.belongsToRsu(aux_point)) {
-                            intersections++;
-                            break;
+                    if (previous_rsu != null && previous_rsu.belongsToRsu(aux_point)) {
+                        intersections++;
+                    }else {
+                        for (Rsu rsu : road_side_units) {
+                            if (rsu.belongsToRsu(aux_point)) {
+                                previous_rsu = rsu;
+                                intersections++;
+                                break;
+                            }
                         }
                     }
                 }
