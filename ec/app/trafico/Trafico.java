@@ -29,17 +29,31 @@ public class Trafico extends Problem implements SimpleProblemForm {
         if( !( ind instanceof FloatVectorIndividual ) )
             state.output.fatal( "The individuals for this problem should be FloatVectorIndividuals." );
 
+        System.out.println("#######");
+        long startTime1 = System.currentTimeMillis();
         FloatVectorIndividual temp = (FloatVectorIndividual)ind;
         float[] genome = temp.genome;
         int numDecisionVars = genome.length;
 
         double[] objectives = ((MultiObjectiveFitness)ind.fitness).getObjectives();
 
+        long startTime2 = System.currentTimeMillis();
         objectives[0] = costo(ind);
+        long endTime2 = System.currentTimeMillis();
+        System.out.print("Total cost: ");
+        System.out.println(endTime2 - startTime2);
+
+        long startTime3 = System.currentTimeMillis();
         objectives[1]  = qos(ind);
+        long endTime3 = System.currentTimeMillis();
+        System.out.print("Total qos: ");
+        System.out.println(endTime3 - startTime3);
 
         ((MultiObjectiveFitness)ind.fitness).setObjectives(state, objectives);
         ind.evaluated = true;
+        long endTime1 = System.currentTimeMillis();
+        System.out.print("Total evaluation: ");
+        System.out.println(endTime1 - startTime1);
     }
 
 
@@ -58,6 +72,7 @@ public class Trafico extends Problem implements SimpleProblemForm {
 
     }
 
+
     public double qos (Individual ind){
         boolean debug;
         FloatVectorIndividual t_ind = (FloatVectorIndividual)ind;
@@ -67,6 +82,7 @@ public class Trafico extends Problem implements SimpleProblemForm {
 
         ArrayList<Circle> road_side_units = new ArrayList<Circle>();
 
+        long startTime1 = System.currentTimeMillis();
         // Create RSU's
         for (int i = 0; i < t_ind.genome.length; i++){
             int tipo_infraestructura = (int)Math.floor(t_ind.genome[i]);
@@ -79,7 +95,11 @@ public class Trafico extends Problem implements SimpleProblemForm {
                 road_side_units.add(new Circle(center, radio_circulo));
             }
         }
+        long endTime1 = System.currentTimeMillis();
+        System.out.print("Create RSUs: ");
+        System.out.println(endTime1 - startTime1);
 
+        long startTime2 = System.currentTimeMillis();
         // Iterate through the segments
         for (int i = 0; i < t_ind.genome.length; i++){
 
@@ -139,6 +159,9 @@ public class Trafico extends Problem implements SimpleProblemForm {
             coverered_distance = intersections * module_section;
             qos += t_spe.getCantidadVehiculosSegmento()[i] * (coverered_distance)/(double)(t_spe.getVelocidadSegmento()[i]*1000);
         }
+        long endTime2 = System.currentTimeMillis();
+        System.out.print("Itarate through segments: ");
+        System.out.println(endTime2 - startTime2);
 
         return qos;
     }
