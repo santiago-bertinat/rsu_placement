@@ -43,9 +43,9 @@ public class RsuPlacement extends Problem implements SimpleProblemForm {
         //     System.out.println(t_ind.genome[i]);
         // }
 
-        System.out.println("RESULT");
-        System.out.println(objectives[0] + " " + objectives[1]);
-        System.out.println("---------------------------------");
+        // System.out.println("RESULT");
+        // System.out.println(objectives[0] + " " + objectives[1]);
+        // System.out.println("---------------------------------");
 
         ((MultiObjectiveFitness)ind.fitness).setObjectives(state, objectives);
         ind.evaluated = true;
@@ -88,7 +88,7 @@ public class RsuPlacement extends Problem implements SimpleProblemForm {
         for (Segment segment : t_spe.getSegments()) {
             ideal += segment.distance() * segment.importance;
         }
-        System.out.println("IDEAL:" + ideal);
+        // System.out.println("IDEAL:" + ideal);
 
         // Iterate through the segments
         if (road_side_units.size() > 0) {

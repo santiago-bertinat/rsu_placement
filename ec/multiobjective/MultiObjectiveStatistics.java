@@ -16,6 +16,7 @@ import ec.simple.SimpleStatistics;
 import ec.util.*;
 import ec.vector.*;
 import java.io.*;
+import java.util.*;
 
 import components.Segment;
 import components.Point;
@@ -77,7 +78,11 @@ public class MultiObjectiveStatistics extends SimpleStatistics
         moduloFront = state.parameters.getInt(base.push(P_MODULO_FRONT_FILE),null, moduloFront);
 
 
-        File frontFile = state.parameters.getFile(base.push(P_PARETO_FRONT_FILE),null);
+        // File frontFile = state.parameters.getFile(base.push(P_PARETO_FRONT_FILE),null);
+        Random generator = new Random();
+        String front_path = state.parameters.getStringWithDefault(base.push(P_PARETO_FRONT_FILE), base.push(P_PARETO_FRONT_FILE), null);
+        File frontFile = new File(front_path + String.valueOf(generator.nextInt(1000)));
+
         File solutionFile = state.parameters.getFile(base.push(P_SOLUTION_FILE),null);
         try
             {
