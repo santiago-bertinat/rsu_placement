@@ -5,12 +5,19 @@ eval.problem = ec.app.trafico.Trafico
 
 # Defino las variables generales al problema
 pop.subpop.0.size =                     72
-generations =                           1
+generations =                           30
 
 # Hilos y semillas
-pop.subpop.0.evalthreads =1
-pop.subpop.0.breedthreads =1
+evalthreads=8
+breedthreads=8
 seed.0 = time
+seed.1 = time
+seed.2 = time
+seed.3 = time
+seed.4 = time
+seed.5 = time
+seed.6 = time
+seed.7 = time
 
 
 

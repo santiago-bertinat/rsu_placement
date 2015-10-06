@@ -291,12 +291,12 @@ public class FloatVectorSpecies extends VectorSpecies
     protected double [] longitudes;
     protected int [] pto_inicial_segmento;
     protected int [] pto_final_segmento;
-    protected int [] cantidad_vehiculos_segmento;
-    protected int [] velocidad_segmento;
+    protected double [] vehiculos_segmento;
     protected double [] precio_antena;
     protected double [] radio_antena;
     protected double [] potencia_antena;
     protected double [] dbi_antena;
+    protected int [] capacidad_antena;
     protected double p_mut_cambiar_a_cero;
     protected double p_mut_cambiar_antena;
     protected double p_mut_cambiar_gaussiana;
@@ -347,12 +347,8 @@ public class FloatVectorSpecies extends VectorSpecies
         return pto_final_segmento;
     }
 
-    public int [] getCantidadVehiculosSegmento(){
-        return cantidad_vehiculos_segmento;
-    }
-
-    public int [] getVelocidadSegmento(){
-        return velocidad_segmento;
+    public double [] getVehiculosSegmento(){
+        return vehiculos_segmento;
     }
 
     public double [] getPrecioAntena(){
@@ -370,6 +366,10 @@ public class FloatVectorSpecies extends VectorSpecies
 
     public double [] getDbiAntena(){
         return dbi_antena;
+    }
+
+    public int [] getCapacidadAntena(){
+        return capacidad_antena;
     }
 
     public void outOfRangeRetryLimitReached(EvolutionState state)
@@ -461,7 +461,7 @@ public class FloatVectorSpecies extends VectorSpecies
         setupGenome(state, base);
 
         //Inicializo la variable de inicializaciones especiales
-        inicializacion_especial=17;
+        inicializacion_especial=0;
 
         // OUT OF BOUNDS RETRIES
 
@@ -508,12 +508,12 @@ public class FloatVectorSpecies extends VectorSpecies
         longitudes= new double[numero_de_puntos];
         pto_inicial_segmento = new int [genomeSize];
         pto_final_segmento = new int [genomeSize];
-        cantidad_vehiculos_segmento=new int [genomeSize];
-        velocidad_segmento=new int [genomeSize];
+        vehiculos_segmento=new double [genomeSize];
         dbi_antena=new double[(int)Math.round(maxGene[0])];
         potencia_antena=new double[(int)Math.round(maxGene[0])];
         precio_antena=new double[(int)Math.round(maxGene[0])];
         radio_antena=new double[(int)Math.round(maxGene[0])];
+        capacidad_antena=new int[(int)Math.round(maxGene[0])];
         resultados_greedys = new float[17][];
         for (int i=0;i<17; i++)
             resultados_greedys[i]=new float[genomeSize];
@@ -548,9 +548,7 @@ public class FloatVectorSpecies extends VectorSpecies
                 line_tokens = line.split(" ");
                 pto_inicial_segmento[i]=Integer.parseInt(line_tokens[0]);
                 pto_final_segmento[i]=Integer.parseInt(line_tokens[1]);
-                cantidad_vehiculos_segmento[i]=Integer.parseInt(line_tokens[2]);
-                velocidad_segmento[i]=Integer.parseInt(line_tokens[3]);
-
+                vehiculos_segmento[i]=Double.parseDouble(line_tokens[2]);
             }
             br.close();
 
@@ -566,6 +564,7 @@ public class FloatVectorSpecies extends VectorSpecies
             potencia_antena[0]=0;
             precio_antena[0]=0;
             radio_antena[0]=0;
+            capacidad_antena[0]=0;
             for (int i=1;i<Math.round(maxGene[0]);i++){
                 line = br.readLine();
                 line_tokens = line.split(" ");
@@ -573,6 +572,7 @@ public class FloatVectorSpecies extends VectorSpecies
                 potencia_antena[i]=Double.parseDouble(line_tokens[1]);
                 precio_antena[i]=Double.parseDouble(line_tokens[2]);
                 radio_antena[i]=Double.parseDouble(line_tokens[3]);
+                capacidad_antena[i]=Integer.parseInt(line_tokens[4]);
             }
             br.close();
 
@@ -584,7 +584,6 @@ public class FloatVectorSpecies extends VectorSpecies
             line=null;
             line_tokens=null;
             for (int i=0;i<17;i++){
-                System.out.println(i);
                 line = br.readLine();
                 line_tokens = line.split(",");
                 for (int j=0; j<genomeSize; j++)
