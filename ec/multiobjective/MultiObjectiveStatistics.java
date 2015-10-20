@@ -17,9 +17,9 @@ import ec.util.*;
 import ec.vector.*;
 import java.io.*;
 
-/* 
+/*
  * MultiObjectiveStatistics.java
- * 
+ *
  * Created: Thu Feb 04 2010
  * By: Faisal Abidi and Sean Luke
  *
@@ -35,7 +35,7 @@ import java.io.*;
  * <li><p>The objective values of the Pareto Front are written in tabular form to a special
  * Pareto Front file specified with the parameters below.  This file can be easily read by
  * gnuplot or Excel etc. to display the Front (if it's 2D or perhaps 3D).
- * 
+ *
  * <p>
  * <b>Parameters</b><br>
  * <table>
@@ -48,13 +48,13 @@ import java.io.*;
  */
 
 public class MultiObjectiveStatistics extends SimpleStatistics
-    {   
+    {
     /** front file parameter */
     public static final String P_MODULO_FRONT_FILE = "modulo.front";
     public static final String P_PARETO_FRONT_FILE = "front";
     public static final String P_SILENT_FRONT_FILE = "silent.front";
     public static final String P_SOLUTION_FILE="solution.file";
-        
+
     public boolean silentFront;
 
     /** The pareto front log */
@@ -69,7 +69,7 @@ public class MultiObjectiveStatistics extends SimpleStatistics
         silentFront = state.parameters.getBoolean(base.push(P_SILENT), null, false);
         // yes, we're stating it a second time.  It's correct logic.
         silentFront = state.parameters.getBoolean(base.push(P_SILENT_FRONT_FILE), null, silentFront);
-        
+
 
         moduloFront = state.parameters.getInt(base.push(P_MODULO_FRONT_FILE),null, moduloFront);
 
@@ -125,31 +125,31 @@ public class MultiObjectiveStatistics extends SimpleStatistics
         //             {
         //             public boolean lt(Object a, Object b)
         //                 {
-        //                 return (((MultiObjectiveFitness) (((Individual) a).fitness)).getObjective(0) < 
+        //                 return (((MultiObjectiveFitness) (((Individual) a).fitness)).getObjective(0) <
         //                     (((MultiObjectiveFitness) ((Individual) b).fitness)).getObjective(0));
         //                 }
-                    
+
         //             public boolean gt(Object a, Object b)
         //                 {
-        //                 return (((MultiObjectiveFitness) (((Individual) a).fitness)).getObjective(0) > 
+        //                 return (((MultiObjectiveFitness) (((Individual) a).fitness)).getObjective(0) >
         //                     ((MultiObjectiveFitness) (((Individual) b).fitness)).getObjective(0));
         //                 }
         //             });
-                            
-                    
+
+
         //         // write short version of front out to disk
         //         if (!silentFront)
         //             {
         //             if (state.population.subpops.length > 1)
         //                 state.output.println("Subpopulation " + s, frontLog);
-        //             //Imprimir la generacion 
+        //             //Imprimir la generacion
         //             state.output.println("Generacion: "+ state.generation , frontLog);
         //             for (int i = 0; i < sortedFront.length; i++)
         //                 {
         //                 Individual ind = (Individual)(sortedFront[i]);
         //                 MultiObjectiveFitness mof = (MultiObjectiveFitness) (ind.fitness);
         //                 double[] objectives = mof.getObjectives();
-            
+
         //                 String line = "";
         //                 for (int f = 0; f < objectives.length; f++)
         //                     line += (objectives[f] + " ");
@@ -158,7 +158,7 @@ public class MultiObjectiveStatistics extends SimpleStatistics
         //             }
         //      }
         // }
-        }   
+        }
 
 
 
@@ -190,22 +190,22 @@ public class MultiObjectiveStatistics extends SimpleStatistics
                 {
                 public boolean lt(Object a, Object b)
                     {
-                    return (((MultiObjectiveFitness) (((Individual) a).fitness)).getObjective(0) < 
+                    return (((MultiObjectiveFitness) (((Individual) a).fitness)).getObjective(0) <
                         (((MultiObjectiveFitness) ((Individual) b).fitness)).getObjective(0));
                     }
-                
+
                 public boolean gt(Object a, Object b)
                     {
-                    return (((MultiObjectiveFitness) (((Individual) a).fitness)).getObjective(0) > 
+                    return (((MultiObjectiveFitness) (((Individual) a).fitness)).getObjective(0) >
                         ((MultiObjectiveFitness) (((Individual) b).fitness)).getObjective(0));
                     }
                 });
-                        
+
             // print out front to statistics log
             if (doFinal)
                 for (int i = 0; i < sortedFront.length; i++)
                     ((Individual)(sortedFront[i])).printIndividualForHumans(state, statisticslog);
-                
+
             // write short version of front out to disk
             if (!silentFront)
                 {
@@ -218,7 +218,7 @@ public class MultiObjectiveStatistics extends SimpleStatistics
                     double[] objectives = mof.getObjectives();
                     FloatVectorIndividual t_ind = (FloatVectorIndividual)ind;
                     FloatVectorSpecies t_spe=(FloatVectorSpecies)ind.species;
-        
+
                     //Imprimo la ubicacion de antenas
                     state.output.println("SOLUCION DEL FRENTE DE PARETO "+i,solutionLog);
                     int tipo_infraestructura;
@@ -229,9 +229,9 @@ public class MultiObjectiveStatistics extends SimpleStatistics
                             centro=encontrar_centro_antena(t_ind, j, tipo_infraestructura, t_spe);
                             double radio_circulo=t_spe.getRadioAntena()[tipo_infraestructura];
                             double posicion=t_ind.genome[j]-tipo_infraestructura;
-                            state.output.println(j+","+radio_circulo+","+posicion+","+t_spe.getPtoInicialSegmento()[j]+","+t_spe.getPtoFinalSegmento()[j]+","+t_spe.getLongitudes()[t_spe.getPtoInicialSegmento()[j]]+","+t_spe.getLatitudes()[t_spe.getPtoInicialSegmento()[j]]+","+t_spe.getLongitudes()[t_spe.getPtoFinalSegmento()[j]]+","+t_spe.getLatitudes()[t_spe.getPtoFinalSegmento()[j]]+","+centro[1]+","+centro[0], solutionLog);
-                        }     
-                    }    
+                            state.output.println(j+","+radio_circulo+","+posicion+","+t_spe.getSegmento(j)[0]+","+t_spe.getSegmento(j)[1]+","+t_spe.getSegmento(j)[2]+","+t_spe.getSegmento(j)[3]+","+centro[1]+","+centro[0], solutionLog);
+                        }
+                    }
                     state.output.println("",solutionLog);
                     state.output.println("",solutionLog);
 
@@ -247,11 +247,11 @@ public class MultiObjectiveStatistics extends SimpleStatistics
         }
 
         public double [] encontrar_centro_antena (FloatVectorIndividual t_ind, int indice, int tipo_infraestructura, FloatVectorSpecies t_spe){
-            
-            double lat_ini= t_spe.getLatitudes()[t_spe.getPtoInicialSegmento()[indice]];
-            double lng_ini= t_spe.getLongitudes()[t_spe.getPtoInicialSegmento()[indice]];
-            double lat_fin= t_spe.getLatitudes()[t_spe.getPtoFinalSegmento()[indice]];
-            double lng_fin= t_spe.getLongitudes()[t_spe.getPtoFinalSegmento()[indice]];
+
+            double lat_ini = t_spe.getSegmento(indice)[0];
+            double lng_ini = t_spe.getSegmento(indice)[1];
+            double lat_fin = t_spe.getSegmento(indice)[2];
+            double lng_fin = t_spe.getSegmento(indice)[3];
 
             double a=(lng_fin-lng_ini)/(double)(lat_fin-lat_ini);
             double lambda = t_ind.genome[indice]-tipo_infraestructura;
@@ -260,14 +260,14 @@ public class MultiObjectiveStatistics extends SimpleStatistics
                 centro[0]= lat_ini + Math.sqrt((lng_fin-lng_ini)*(lng_fin-lng_ini) + (lat_fin-lat_ini)*(lat_fin-lat_ini))*lambda/(double)Math.sqrt(1+(a*a));
             else
                 centro[0]= lat_ini - Math.sqrt((lng_fin-lng_ini)*(lng_fin-lng_ini) + (lat_fin-lat_ini)*(lat_fin-lat_ini))*lambda/(double)Math.sqrt(1+(a*a));
-            
+
             if (lng_fin>lng_ini)
                 centro[1]= lng_ini + Math.abs(Math.sqrt((lng_fin-lng_ini)*(lng_fin-lng_ini) + (lat_fin-lat_ini)*(lat_fin-lat_ini))*a*lambda/(double)Math.sqrt(1+(a*a)));
             else
                 centro[1]= lng_ini - Math.abs(Math.sqrt((lng_fin-lng_ini)*(lng_fin-lng_ini) + (lat_fin-lat_ini)*(lat_fin-lat_ini))*a*lambda/(double)Math.sqrt(1+(a*a)));
-                
+
             //DEBUG
-            //System.out.println("El centro de ("+lat_ini+" "+lng_ini+") y ("+lat_fin+" "+lng_fin+") es ("+centro[0]+" "+centro[1]+") con lambda "+lambda);   
-            return centro;    
+            //System.out.println("El centro de ("+lat_ini+" "+lng_ini+") y ("+lat_fin+" "+lng_fin+") es ("+centro[0]+" "+centro[1]+") con lambda "+lambda);
+            return centro;
         }
     }

@@ -17,9 +17,9 @@ import java.io.*;
  * range, with <tt>species.mutationProbability</tt>. It can also add gaussian
  * noise to the genes, if so directed in the FloatVectorSpecies. If the gaussian
  * noise pushes the gene out of range, a new noise value is generated.
- * 
+ *
  * <p>
- * <P><b>From ec.Individual:</b> 
+ * <P><b>From ec.Individual:</b>
  *
  * <p>In addition to serialization for checkpointing, Individuals may read and write themselves to streams in three ways.
  *
@@ -27,7 +27,7 @@ import java.io.*;
  * <li><b>writeIndividual(...,DataOutput)/readIndividual(...,DataInput)</b>&nbsp;&nbsp;&nbsp;This method
  * transmits or receives an individual in binary.  It is the most efficient approach to sending
  * individuals over networks, etc.  These methods write the evaluated flag and the fitness, then
- * call <b>readGenotype/writeGenotype</b>, which you must implement to write those parts of your 
+ * call <b>readGenotype/writeGenotype</b>, which you must implement to write those parts of your
  * Individual special to your functions-- the default versions of readGenotype/writeGenotype throw errors.
  * You don't need to implement them if you don't plan on using read/writeIndividual.
  *
@@ -38,7 +38,7 @@ import java.io.*;
  * files for inspection, slight modification, then reading back in later on.  <b>readIndividual</b> reads
  * in the fitness and the evaluation flag, then calls <b>parseGenotype</b> to read in the remaining individual.
  * You are responsible for implementing parseGenotype: the Code class is there to help you.
- * <b>printIndividual</b> writes out the fitness and evaluation flag, then calls <b>genotypeToString</b> 
+ * <b>printIndividual</b> writes out the fitness and evaluation flag, then calls <b>genotypeToString</b>
  * and printlns the resultant string. You are responsible for implementing the genotypeToString method in such
  * a way that parseGenotype can read back in the individual println'd with genotypeToString.  The default form
  * of genotypeToString simply calls <b>toString</b>, which you may override instead if you like.  The default
@@ -47,7 +47,7 @@ import java.io.*;
  *
  * <li><b>printIndividualForHumans(...,PrintWriter)</b>&nbsp;&nbsp;&nbsp;This
  * approach prints an individual in a fashion intended for human consumption only.
- * <b>printIndividualForHumans</b> writes out the fitness and evaluation flag, then calls <b>genotypeToStringForHumans</b> 
+ * <b>printIndividualForHumans</b> writes out the fitness and evaluation flag, then calls <b>genotypeToStringForHumans</b>
  * and printlns the resultant string. You are responsible for implementing the genotypeToStringForHumans method.
  * The default form of genotypeToStringForHumans simply calls <b>toString</b>, which you may override instead if you like
  * (though note that genotypeToString's default also calls toString).  You should handle one of these methods properly
@@ -59,7 +59,7 @@ import java.io.*;
  * a VectorIndividual or subclass, you'll need to read/write those variables as well.
  * <b>Default Base</b><br>
  * vector.float-vect-ind
- * 
+ *
  * @author Liviu Panait
  * @author Sean Luke and Liviu Panait
  * @version 2.0
@@ -123,26 +123,26 @@ public class FloatVectorIndividual extends VectorIndividual
             {
             case VectorSpecies.C_ONE_POINT:
 //                point = state.random[thread].nextInt((len / s.chunksize)+1);
-                // we want to go from 0 ... len-1 
+                // we want to go from 0 ... len-1
                 // so that there is only ONE case of NO-OP crossover, not TWO
                 point = state.random[thread].nextInt((len / s.chunksize));
                 for(int x=0;x<point*s.chunksize;x++)
-                    { 
+                    {
                     tmp = i.genome[x];
-                    i.genome[x] = genome[x]; 
-                    genome[x] = tmp; 
+                    i.genome[x] = genome[x];
+                    genome[x] = tmp;
                     }
                 break;
             case VectorSpecies.C_ONE_POINT_NO_NOP:
                 point = state.random[thread].nextInt((len / s.chunksize) - 1) + 1;  // so it goes from 1 .. len-1
                 for(int x=0;x<point*s.chunksize;x++)
-                    { 
+                    {
                     tmp = i.genome[x];
-                    i.genome[x] = genome[x]; 
-                    genome[x] = tmp; 
+                    i.genome[x] = genome[x];
+                    genome[x] = tmp;
                     }
                 break;
-            case VectorSpecies.C_TWO_POINT: 
+            case VectorSpecies.C_TWO_POINT:
             {
 //                int point0 = state.random[thread].nextInt((len / s.chunksize)+1);
 //                point = state.random[thread].nextInt((len / s.chunksize)+1);
@@ -171,7 +171,7 @@ public class FloatVectorIndividual extends VectorIndividual
                 }
             }
             break;
-            case VectorSpecies.C_TWO_POINT_NO_NOP: 
+            case VectorSpecies.C_TWO_POINT_NO_NOP:
             {
             point = state.random[thread].nextInt((len / s.chunksize));
             int point0 = 0;
@@ -210,7 +210,7 @@ public class FloatVectorIndividual extends VectorIndividual
                 if (!(t < min || t > max || u < min || u > max))
                     {
                     genome[x] = (float)t;
-                    i.genome[x] = (float)u; 
+                    i.genome[x] = (float)u;
                     }
                 }
             }
@@ -230,7 +230,7 @@ public class FloatVectorIndividual extends VectorIndividual
                     u = beta * i.genome[x] + (1 - beta) * genome[x];
                     } while (t < min || t > max || u < min || u > max);
                 genome[x] = (float)t;
-                i.genome[x] = (float)u; 
+                i.genome[x] = (float)u;
                 }
             }
             break;
@@ -284,14 +284,14 @@ public class FloatVectorIndividual extends VectorIndividual
         // set genome
         genome = newgenome;
         }
-        
+
     /**
      * Destructively mutates the individual in some default manner. The default
      * form simply randomizes genes to a uniform distribution from the min and
      * max of the gene values. It can also add gaussian noise to the genes, if
      * so directed in the FloatVectorSpecies. If the gaussian noise pushes the
      * gene out of range, a new noise value is generated.
-     * 
+     *
      * @author Sean Luke, Liviu Panait and Gabriel Balan
      */
     public void defaultMutate(EvolutionState state, int thread)
@@ -300,27 +300,27 @@ public class FloatVectorIndividual extends VectorIndividual
 
 	        MersenneTwisterFast rng = state.random[thread];
 
-	        int posicion_sorteada=rng.nextInt(genome.length);		        
+	        int posicion_sorteada = rng.nextInt(genome.length);
 
 	        double mutacion_sorteada = rng.nextFloat();
-	        int tipo_infraestructura=(int) Math.floor(genome[posicion_sorteada]);
-	        if (mutacion_sorteada<s.getPMutCambiarACero()){
+	        int tipo_infraestructura = (int) Math.floor(genome[posicion_sorteada]);
+	        if (mutacion_sorteada < s.getPMutCambiarACero()){
 	        	//Saco la antena de la posicion
-	        	genome[posicion_sorteada]=genome[posicion_sorteada]-tipo_infraestructura;
+	        	genome[posicion_sorteada] = genome[posicion_sorteada] - tipo_infraestructura;
 	        }
-	        else if (mutacion_sorteada< s.getPMutCambiarACero()+ s.getPMutCambiarAntena()){
+	        else if (mutacion_sorteada < s.getPMutCambiarACero() + s.getPMutCambiarAntena()){
 	        	//Cambio el tipo de antena
-	        	genome[posicion_sorteada]=genome[posicion_sorteada]-tipo_infraestructura;
-	        	genome[posicion_sorteada]=genome[posicion_sorteada]+1+rng.nextInt(3);
+	        	genome[posicion_sorteada] = genome[posicion_sorteada] - tipo_infraestructura;
+	        	genome[posicion_sorteada] = genome[posicion_sorteada] + 1 + rng.nextInt(3);
 
 	        }
 	        else{
-	        	//Hago mutacion gaussiana
-	        	gaussianMutation(state, rng, s, posicion_sorteada);
+	        	float cambio_de_posicion = (1 / 10) * rng.nextInt(11);
+                genome[posicion_sorteada] =  tipo_infraestructura + cambio_de_posicion;
 	        }
-		    
+
         }
-        
+
     void integerRandomWalkMutation(MersenneTwisterFast random, FloatVectorSpecies species, int index)
         {
         double min = species.minGene(index);
@@ -340,7 +340,7 @@ public class FloatVectorIndividual extends VectorIndividual
                 genome[index] = g + n;
             else if ((n == -1 && g < max) ||
                 (n == 1 && g > min))
-                genome[index] = g - n;     
+                genome[index] = g - n;
             }
         while (random.nextBoolean(species.randomWalkProbability(index)));
         }
@@ -358,7 +358,7 @@ public class FloatVectorIndividual extends VectorIndividual
         double maxGene = species.maxGene(index);
         genome[index] = (float)(minGene + random.nextFloat(true, true) * (maxGene - minGene));
         }
-    
+
     void gaussianMutation(EvolutionState state, MersenneTwisterFast random, FloatVectorSpecies species, int index)
         {
         double val;
@@ -379,18 +379,18 @@ public class FloatVectorIndividual extends VectorIndividual
                     species.outOfRangeRetryLimitReached(state);// it better get inlined
                     break;
                     }
-                } 
+                }
             else break;
-            } 
+            }
         while (true);
         genome[index] = (float)val;
         }
-    
+
     void polynomialMutation(EvolutionState state, MersenneTwisterFast random, FloatVectorSpecies species, int index)
         {
         double eta_m = species.mutationDistributionIndex(index);
         boolean alternativePolynomialVersion = species.polynomialIsAlternative(index);
-        
+
         double rnd, delta1, delta2, mut_pow, deltaq;
         double y, yl, yu, val, xy;
         double y1;
@@ -422,7 +422,7 @@ public class FloatVectorIndividual extends VectorIndividual
             y1 = y + deltaq*(yu-yl);
             if (!species.mutationIsBounded(index) || (y1 >= yl && y1 <= yu)) break;  // yay, found one
             }
-                                                                
+
         // at this point, if tries is totalTries, we failed
         if (totalTries != 0 && tries == totalTries)
             {
@@ -433,7 +433,7 @@ public class FloatVectorIndividual extends VectorIndividual
         genome[index] = (float)y1; // ind[index] = y1;
         }
 
-    
+
     /** This function is broken out to keep it identical to NSGA-II's mutation.c code. eta_m is the distribution
         index.  */
     public void polynomialMutate(EvolutionState state, MersenneTwisterFast random, float eta_m, boolean alternativePolynomialVersion, boolean mutationIsBounded)
@@ -442,7 +442,7 @@ public class FloatVectorIndividual extends VectorIndividual
         float[] ind = genome;
 //        double[] min_realvar = s.minGenes;
 //        double[] max_realvar = s.maxGenes;
-                
+
         double rnd, delta1, delta2, mut_pow, deltaq;
         double y, yl, yu, val, xy;
         double y1;
@@ -477,7 +477,7 @@ public class FloatVectorIndividual extends VectorIndividual
                     y1 = y + deltaq*(yu-yl);
                     if (!mutationIsBounded || (y1 >= yl && y1 <= yu)) break;  // yay, found one
                     }
-                                        
+
                 // at this point, if tries is totalTries, we failed
                 if (totalTries != 0 && tries == totalTries)
                     {
@@ -501,13 +501,13 @@ public class FloatVectorIndividual extends VectorIndividual
         float[] parent2 = other.genome;
 //        double[] min_realvar = s.minGenes;
 //        double[] max_realvar = s.maxGenes;
-                
-                
+
+
         double y1, y2, yl, yu;
         double c1, c2;
         double alpha, beta, betaq;
         double rand;
-                
+
         for(int i = 0; i < parent1.length; i++)
             {
             if (random.nextBoolean())  // 0.5f
@@ -525,7 +525,7 @@ public class FloatVectorIndividual extends VectorIndividual
                         y2 = parent1[i];
                         }
                     yl = s.minGene(i); //min_realvar[i];
-                    yu = s.maxGene(i); //max_realvar[i];    
+                    yu = s.maxGene(i); //max_realvar[i];
                     rand = random.nextFloat();
                     beta = 1.0 + (2.0*(y1-yl)/(y2-y1));
                     alpha = 2.0 - Math.pow(beta,-(eta_c+1.0));
@@ -602,16 +602,26 @@ public class FloatVectorIndividual extends VectorIndividual
         {
         FloatVectorSpecies s = (FloatVectorSpecies) species;
 
-        int ini_especial=s.getInicializacionEspecial();
+        int ini_especial = s.getInicializacionEspecial();
 
 
-        if (ini_especial>0){
+        if (ini_especial > 2){
+            //Inicializo tupla con la solucion de greedy
             for (int x = 0; x < genome.length; x++)
                 genome[x]=s.getResultadosGreedys()[ini_especial-1][x];
             s.decreaseInicializacionEspecial();
         }
-        else if (ini_especial==0){
-        	//Inicializo tupla con la solucion de greedy
+        else if (ini_especial == 2){
+            for (int x = 0; x < genome.length; x++)
+                genome[x]=(float)1.5;
+            s.decreaseInicializacionEspecial();
+        }
+        else if (ini_especial == 1){
+            for (int x = 0; x < genome.length; x++)
+                genome[x]=(float)3.5;
+            s.decreaseInicializacionEspecial();
+        }
+        else if (ini_especial == 0){
         	for (int x = 0; x < genome.length; x++)
         		genome[x]=(float)0.0;
         	s.decreaseInicializacionEspecial();
@@ -622,7 +632,7 @@ public class FloatVectorIndividual extends VectorIndividual
         	for (int x = 0; x < genome.length; x++)
         	    {
         	    int type = s.mutationType(x);
-        	    if (type == FloatVectorSpecies.C_INTEGER_RESET_MUTATION || 
+        	    if (type == FloatVectorSpecies.C_INTEGER_RESET_MUTATION ||
         	        type == FloatVectorSpecies.C_INTEGER_RANDOM_WALK_MUTATION)  // integer type
         	        {
         	        int minGene = (int)Math.floor(s.minGene(x));
@@ -634,7 +644,7 @@ public class FloatVectorIndividual extends VectorIndividual
         	        genome[x] = (float)(s.minGene(x) + random.nextDouble(true, true) * (s.maxGene(x) - s.minGene(x)));
         	        }
         	    }
-        }     
+        }
         }
 
     public int hashCode()
@@ -734,10 +744,10 @@ public class FloatVectorIndividual extends VectorIndividual
             genome[x] = dataInput.readFloat();
         }
 
-    /** Clips each gene value to be within its specified [min,max] range.  
+    /** Clips each gene value to be within its specified [min,max] range.
         NaN is presently considered in range but the behavior of this method
         should be assumed to be unspecified on encountering NaN. */
-    public void clamp() 
+    public void clamp()
         {
         FloatVectorSpecies _species = (FloatVectorSpecies)species;
         for (int i = 0; i < genomeLength(); i++)
@@ -745,7 +755,7 @@ public class FloatVectorIndividual extends VectorIndividual
             float minGene = (float)_species.minGene(i);
             if (genome[i] < minGene)
                 genome[i] = minGene;
-            else 
+            else
                 {
                 float maxGene = (float)_species.maxGene(i);
                 if (genome[i] > maxGene)
@@ -753,11 +763,11 @@ public class FloatVectorIndividual extends VectorIndividual
                 }
             }
         }
-                
+
     public void setGenomeLength(int len)
         {
         float[] newGenome = new float[len];
-        System.arraycopy(genome, 0, newGenome, 0, 
+        System.arraycopy(genome, 0, newGenome, 0,
             genome.length < newGenome.length ? genome.length : newGenome.length);
         genome = newGenome;
         }
@@ -765,7 +775,7 @@ public class FloatVectorIndividual extends VectorIndividual
     /** Returns true if each gene value is within is specified [min,max] range.
         NaN is presently considered in range but the behavior of this method
         should be assumed to be unspecified on encountering NaN. */
-    public boolean isInRange() 
+    public boolean isInRange()
         {
         FloatVectorSpecies _species = (FloatVectorSpecies)species;
         for (int i = 0; i < genomeLength(); i++)
@@ -775,10 +785,10 @@ public class FloatVectorIndividual extends VectorIndividual
         }
 
     public double distanceTo(Individual otherInd)
-        { 
-        if (!(otherInd instanceof FloatVectorIndividual)) 
+        {
+        if (!(otherInd instanceof FloatVectorIndividual))
             return super.distanceTo(otherInd);  // will return infinity!
-                
+
         FloatVectorIndividual other = (FloatVectorIndividual) otherInd;
         float[] otherGenome = other.genome;
         double sumSquaredDistance =0.0;

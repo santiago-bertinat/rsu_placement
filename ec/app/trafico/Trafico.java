@@ -42,11 +42,11 @@ public class Trafico extends Problem implements SimpleProblemForm {
         FloatVectorIndividual t_ind = (FloatVectorIndividual)ind;
         FloatVectorSpecies t_spe = (FloatVectorSpecies)ind.species;
 
-        double costo=0;
+        double costo = 0;
         int tipo_infraestructura;
-        for (int i=0;i<t_ind.genome.length;i++){
-            tipo_infraestructura=(int) Math.floor(t_ind.genome[i]);
-            costo+=t_spe.getPrecioAntena()[tipo_infraestructura];
+        for (int i = 0; i < t_ind.genome.length; i++){
+            tipo_infraestructura = (int) Math.floor(t_ind.genome[i]);
+            costo += t_spe.getPrecioAntena()[tipo_infraestructura];
         }
         return costo;
 
@@ -72,12 +72,12 @@ public class Trafico extends Problem implements SimpleProblemForm {
                 double radio_circulo = t_spe.getRadioAntena()[tipo_infraestructura];
 
                 for (int k = 0; k < t_ind.genome.length; k++){
-                    double xini = t_spe.getLatitudes()[t_spe.getPtoInicialSegmento()[k]];
-                    double yini = t_spe.getLongitudes()[t_spe.getPtoInicialSegmento()[k]];
-                    double xfin = t_spe.getLatitudes()[t_spe.getPtoFinalSegmento()[k]];
-                    double yfin = t_spe.getLongitudes()[t_spe.getPtoFinalSegmento()[k]];
+                    double xini = t_spe.getSegmento(k)[0];
+                    double yini = t_spe.getSegmento(k)[1];
+                    double xfin = t_spe.getSegmento(k)[2];
+                    double yfin = t_spe.getSegmento(k)[3];
 
-                    double segment_length = twoPointsDistance(xini, yini, xfin, yfin);
+                    double segment_length = t_spe.getDistanciaSegmento()[k];
                     double segment_coverage = 0;
 
                     // If rsu i belongs to k segment
@@ -133,43 +133,34 @@ public class Trafico extends Problem implements SimpleProblemForm {
                             }
                         }
 
-                        double vehiculos_segmento = t_spe.getVehiculosSegmento()[i];
+                        double vehiculos_segmento = t_spe.getVehiculosSegmento()[k];
                         int vehiculos_actuales_cubiertos = (int)(segment_coverage * vehiculos_segmento);
                         int capacidad_total = t_spe.getCapacidadAntena()[tipo_infraestructura];
 
                         if (vehiculos_cubiertos_rsu[i] < capacidad_total && vehiculos_cubiertos_segmento[k] < vehiculos_segmento) {
                             double vehiculos_no_cubiertos = 0;
-                            if ((capacidad_total - vehiculos_cubiertos_rsu[i]) < (vehiculos_segmento - vehiculos_cubiertos_segmento[k])) {
-                                vehiculos_no_cubiertos = capacidad_total - vehiculos_cubiertos_rsu[i];
-                            }else {
-                                vehiculos_no_cubiertos = vehiculos_segmento - vehiculos_cubiertos_segmento[k];
-                            }
-
-                            if (vehiculos_no_cubiertos > vehiculos_actuales_cubiertos){
-                                vehiculos_cubiertos_rsu[i] += vehiculos_actuales_cubiertos;
-                                vehiculos_cubiertos_segmento[k] += vehiculos_actuales_cubiertos;
-                            }else {
-                                vehiculos_cubiertos_rsu[i]  += vehiculos_no_cubiertos;
-                                vehiculos_cubiertos_segmento[k] += vehiculos_no_cubiertos;
-                            }
+                            double capacidad_actual_rsu = capacidad_total - vehiculos_cubiertos_rsu[i];
+                            double vehiculos_restantes_segmento = vehiculos_segmento - vehiculos_cubiertos_segmento[k];
+                            vehiculos_no_cubiertos = Math.min(Math.min(capacidad_actual_rsu, vehiculos_restantes_segmento), vehiculos_actuales_cubiertos);
+                            vehiculos_cubiertos_rsu[i]  += vehiculos_no_cubiertos;
+                            vehiculos_cubiertos_segmento[k] += vehiculos_no_cubiertos;
                         }
                     }
                 }
             }
         }
         for (int i = 0; i < t_ind.genome.length; i++) {
-            qos += vehiculos_cubiertos_rsu[i];
+            qos += vehiculos_cubiertos_segmento[i];
         }
-
         return qos;
     }
 
     public double[] findRsuCenter (FloatVectorIndividual t_ind, int indice, int tipo_infraestructura, FloatVectorSpecies t_spe){
 
-        double lat_ini= t_spe.getLatitudes()[t_spe.getPtoInicialSegmento()[indice]];
-        double lng_ini= t_spe.getLongitudes()[t_spe.getPtoInicialSegmento()[indice]];
-        double lat_fin= t_spe.getLatitudes()[t_spe.getPtoFinalSegmento()[indice]];
-        double lng_fin= t_spe.getLongitudes()[t_spe.getPtoFinalSegmento()[indice]];
+        double lat_ini = t_spe.getSegmento(indice)[0];
+        double lng_ini = t_spe.getSegmento(indice)[1];
+        double lat_fin = t_spe.getSegmento(indice)[2];
+        double lng_fin = t_spe.getSegmento(indice)[3];
         double rsu_position = t_ind.genome[indice] - tipo_infraestructura;
 
         double x_length = Math.abs(lat_ini - lat_fin) * rsu_position;
@@ -206,19 +197,14 @@ public class Trafico extends Problem implements SimpleProblemForm {
     }
 
     public static double twoPointsDistance(double x1, double y1, double x2, double y2){
-        double theta = x1 - x2;
-        double dist = Math.sin(deg2rad(y1)) * Math.sin(deg2rad(y2)) + Math.cos(deg2rad(y1)) * Math.cos(deg2rad(y2)) * Math.cos(deg2rad(theta));
-        dist = Math.acos(dist);
-        dist = rad2deg(dist);
-        dist = dist * 60 * 1.1515;
-        dist = dist * 1.609344 * 1000;
+        double d2r = Math.PI / 180.0;
+        double dLat = deg2rad((x1 - x2));
+        double dLon = deg2rad((y1 - y2));
+
+        double x = (dLon) * Math.cos(deg2rad((x1 + x2)/2));
+        double dist = Math.sqrt(x*x + dLat*dLat) * 6371000;
 
         return (dist);
-
-        // double deglen=110.25*1000;
-        // double x= x1-x2;
-        // double y= (y1-y2)*Math.cos(x2);
-        // return deglen* Math.sqrt(x*x + y*y);
     }
 
     public static double angleBetweenLines(double x1,double y1,double x2,double y2, double x3,double y3,double x4,double y4) {
@@ -239,13 +225,8 @@ public class Trafico extends Problem implements SimpleProblemForm {
     }
 
     private static double deg2rad(double deg) {
-        return (deg * Math.PI / 180.0);
+        return (deg / 180 * Math.PI);
     }
-
-    private static double rad2deg(double rad) {
-        return (rad * 180.0 / Math.PI);
-    }
-
 }
 
 
