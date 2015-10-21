@@ -80,71 +80,81 @@ public class Trafico extends Problem implements SimpleProblemForm {
                     double segment_length = t_spe.getDistanciaSegmento()[k];
                     double segment_coverage = 0;
 
-                    // If rsu i belongs to k segment
-                    if (k == i){
-                        segment_coverage = segment_length / radio_circulo;
-                    }else {
-                        boolean start_inside = radio_circulo > twoPointsDistance(xcentro, ycentro, xini, yini);
-                        boolean end_inside = radio_circulo > twoPointsDistance(xcentro, ycentro, xfin, yfin);
+                    boolean start_inside = radio_circulo >= twoPointsDistance(xcentro, ycentro, xini, yini);
+                    boolean end_inside = radio_circulo >= twoPointsDistance(xcentro, ycentro, xfin, yfin);
 
-                        if (start_inside && end_inside){
-                            segment_coverage = segment_length;
+                    if (start_inside && end_inside){
+                        segment_coverage = 1;
+                        // System.out.println("TODO ADENTRO");
+                    }
+                    else if (start_inside || end_inside){
+                        //Hay un punto adentro y uno afuera
+                        double alpha;
+                        double center_extreme_distance;
+
+                        if (start_inside){
+                            alpha = angleBetweenLines(xcentro, ycentro, xini, yini, xini, yini, xfin, yfin);
+                            center_extreme_distance = twoPointsDistance(xcentro, ycentro, xini, yini);
+                        }else{
+                            alpha = angleBetweenLines(xcentro, ycentro, xfin, yfin, xfin, yfin, xini, yini);
+                            center_extreme_distance = twoPointsDistance(xcentro, ycentro, xfin, yfin);
                         }
-                        else if (start_inside || end_inside){
-                            //Hay un punto adentro y uno afuera
-                            double alpha;
-                            double center_extreme_distance;
 
+                        if (alpha != 0){
+                            double beta = Math.asin(center_extreme_distance * Math.sin(alpha) / (double)radio_circulo);
+                            // System.out.println("#######");
+                            // System.out.println(alpha);
+                            // System.out.println(beta);
+                            // System.out.println(segment_length);
+                            // System.out.println(Math.sin(Math.PI - alpha - beta) * radio_circulo / Math.sin(alpha));
+                            segment_coverage = (Math.sin(Math.PI - alpha - beta) * radio_circulo / Math.sin(alpha)) / segment_length;
+                            // System.out.println("1");
+                            // System.out.println(segment_coverage);
+                        }
+                        else{
+                            //Los 3 puntos están alineados
                             if (start_inside){
-                                alpha = angleBetweenLines(xcentro, ycentro, xini, yini, xini, yini, xfin, yfin);
-                                center_extreme_distance = twoPointsDistance(xcentro, ycentro, xini, yini);
-                            }else{
-                                alpha = angleBetweenLines(xcentro, ycentro, xfin, yfin, xini, yini, xfin, yfin);
-                                center_extreme_distance = twoPointsDistance(xcentro, ycentro, xfin, yfin);
-                            }
-
-                            if (alpha != 0){
-                                double beta = Math.asin(center_extreme_distance * Math.sin(alpha) / (double)radio_circulo);
-                                segment_coverage = segment_length / (Math.sin(Math.PI - alpha - beta) * radio_circulo / Math.sin(alpha));
+                                segment_coverage = (radio_circulo - twoPointsDistance(xcentro, ycentro, xini, yini)) / segment_length;
+                                // System.out.println("2");
+                                // System.out.println(segment_coverage);
                             }
                             else{
-                                //Los 3 puntos están alineados
-                                if (start_inside){
-                                    segment_coverage = segment_length / (radio_circulo - twoPointsDistance(xcentro, ycentro, xini, yini));
-                                }
-                                else{
-                                    segment_coverage = segment_length / (radio_circulo - twoPointsDistance(xcentro, ycentro, xfin, yfin));
-                                }
-                            }
-
-                        }
-                        else if (pointToSegmentDistance(xcentro, ycentro, xini, yini, xfin, yfin) < radio_circulo){
-                            //La recta intersecta el circulo, falta ver si el segmento tambien
-                            double m = pointToSegmentDistance(xcentro, ycentro, xini, yini, xfin, yfin);
-                            double dAC = twoPointsDistance(xcentro, ycentro, xini, yini);
-                            double dBC = twoPointsDistance(xcentro, ycentro, xfin, yfin);
-                            double dAB = twoPointsDistance(xini, yini, xfin, yfin);
-                            double dAQ = Math.sqrt(Math.pow(dAC, 2) - Math.pow(m, 2));
-                            double dQB = Math.sqrt(Math.pow(dBC, 2) - Math.pow(m, 2));
-                            if (dAQ < dAB && dQB < dAB){
-                                //El segmento intersecta el circulo
-                                double lambda = Math.sqrt(Math.pow(radio_circulo,2) - Math.pow(m,2));
-                                segment_coverage = segment_length / (2 * lambda);
+                                segment_coverage = (radio_circulo - twoPointsDistance(xcentro, ycentro, xfin, yfin)) / segment_length;
+                                // System.out.println("3");
+                                // System.out.println(segment_coverage);
                             }
                         }
 
-                        double vehiculos_segmento = t_spe.getVehiculosSegmento()[k];
-                        int vehiculos_actuales_cubiertos = (int)(segment_coverage * vehiculos_segmento);
-                        int capacidad_total = t_spe.getCapacidadAntena()[tipo_infraestructura];
-
-                        if (vehiculos_cubiertos_rsu[i] < capacidad_total && vehiculos_cubiertos_segmento[k] < vehiculos_segmento) {
-                            double vehiculos_no_cubiertos = 0;
-                            double capacidad_actual_rsu = capacidad_total - vehiculos_cubiertos_rsu[i];
-                            double vehiculos_restantes_segmento = vehiculos_segmento - vehiculos_cubiertos_segmento[k];
-                            vehiculos_no_cubiertos = Math.min(Math.min(capacidad_actual_rsu, vehiculos_restantes_segmento), vehiculos_actuales_cubiertos);
-                            vehiculos_cubiertos_rsu[i]  += vehiculos_no_cubiertos;
-                            vehiculos_cubiertos_segmento[k] += vehiculos_no_cubiertos;
+                    }
+                    else if (pointToSegmentDistance(xcentro, ycentro, xini, yini, xfin, yfin) < radio_circulo){
+                        //La recta intersecta el circulo, falta ver si el segmento tambien
+                        double m = pointToSegmentDistance(xcentro, ycentro, xini, yini, xfin, yfin);
+                        double dAC = twoPointsDistance(xcentro, ycentro, xini, yini);
+                        double dBC = twoPointsDistance(xcentro, ycentro, xfin, yfin);
+                        double dAB = twoPointsDistance(xini, yini, xfin, yfin);
+                        double dAQ = Math.sqrt(Math.pow(dAC, 2) - Math.pow(m, 2));
+                        double dQB = Math.sqrt(Math.pow(dBC, 2) - Math.pow(m, 2));
+                        if (dAQ < dAB && dQB < dAB){
+                            //El segmento intersecta el circulo
+                            double lambda = Math.sqrt(Math.pow(radio_circulo,2) - Math.pow(m,2));
+                            segment_coverage = (2 * lambda) / segment_length;
+                            // System.out.println("4");
+                            // System.out.println(segment_coverage);
                         }
+                    }
+
+                    double vehiculos_segmento = t_spe.getVehiculosSegmento()[k];
+                    int vehiculos_actuales_cubiertos = (int)(segment_coverage * vehiculos_segmento);
+                    int capacidad_total = t_spe.getCapacidadAntena()[tipo_infraestructura];
+
+                    if (vehiculos_cubiertos_rsu[i] < capacidad_total && vehiculos_cubiertos_segmento[k] < vehiculos_segmento) {
+                        double vehiculos_no_cubiertos = 0;
+                        double capacidad_actual_rsu = capacidad_total - vehiculos_cubiertos_rsu[i];
+                        double vehiculos_restantes_segmento = vehiculos_segmento - vehiculos_cubiertos_segmento[k];
+
+                        vehiculos_no_cubiertos = Math.min(Math.min(capacidad_actual_rsu, vehiculos_restantes_segmento), vehiculos_actuales_cubiertos);
+                        vehiculos_cubiertos_rsu[i]  += vehiculos_no_cubiertos;
+                        vehiculos_cubiertos_segmento[k] += vehiculos_no_cubiertos;
                     }
                 }
             }

@@ -454,17 +454,15 @@ public class FloatVectorSpecies extends VectorSpecies
         setupGenome(state, base);
 
         //Inicializo la variable de inicializaciones especiales
-        inicializacion_especial = 2;
+        inicializacion_especial = 3;
 
         // OUT OF BOUNDS RETRIES
-
         outOfBoundsRetries = state.parameters.getIntWithDefault(base.push(P_OUTOFBOUNDS_RETRIES), def.push(P_OUTOFBOUNDS_RETRIES), DEFAULT_OUT_OF_BOUNDS_RETRIES);
         if(outOfBoundsRetries<0)
             state.output.fatal("Out of bounds retries must be >= 0.", base.push(P_OUTOFBOUNDS_RETRIES), def.push(P_OUTOFBOUNDS_RETRIES));
 
 
         // CREATE THE ARRAYS
-
         minGene = new double[genomeSize + 1];
         maxGene = new double[genomeSize + 1];
         mutationType = fill(new int[genomeSize + 1], -1);
@@ -476,7 +474,6 @@ public class FloatVectorSpecies extends VectorSpecies
 
 
         // GLOBAL MIN/MAX GENES
-
         double _minGene = state.parameters.getDoubleWithDefault(base.push(P_MINGENE), def.push(P_MINGENE), 0);
         double _maxGene = state.parameters.getDouble(base.push(P_MAXGENE), def.push(P_MAXGENE), _minGene);
         if (_maxGene < _minGene)
@@ -559,20 +556,21 @@ public class FloatVectorSpecies extends VectorSpecies
             }
             br.close();
 
-            //Cargo los greedys
-            // String ruta_greedys=state.parameters.getStringWithDefault(base.push(P_RUTA_RES_GREEDY), def.push(P_RUTA_RES_GREEDY), null);
-            // fin = new File(ruta_greedys);
-            // fis = new FileInputStream(fin);
-            // br = new BufferedReader(new InputStreamReader(fis));
-            // line=null;
-            // line_tokens=null;
-            // for (int i=0;i<17;i++){
-            //     line = br.readLine();
-            //     line_tokens = line.split(",");
-            //     for (int j=0; j<genomeSize; j++)
-            //         resultados_greedys[i][j]=Float.parseFloat(line_tokens[j]);
-            // }
-            // br.close();
+            // Cargo los greedys
+            String ruta_greedys = state.parameters.getStringWithDefault(base.push(P_RUTA_RES_GREEDY), def.push(P_RUTA_RES_GREEDY), null);
+            fin = new File(ruta_greedys);
+            fis = new FileInputStream(fin);
+            br = new BufferedReader(new InputStreamReader(fis));
+            line = null;
+            line_tokens = null;
+
+            for (int i = 0; i < 1; i++){
+                line = br.readLine();
+                line_tokens = line.split(",");
+                for (int j = 0; j < genomeSize; j++)
+                    resultados_greedys[i][j] = Float.parseFloat(line_tokens[j]);
+            }
+            br.close();
 
         }catch(IOException e){
             state.output.fatal (e+"hubo algun problema con la lectura del archivo");

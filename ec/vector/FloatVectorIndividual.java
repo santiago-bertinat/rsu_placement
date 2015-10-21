@@ -608,7 +608,7 @@ public class FloatVectorIndividual extends VectorIndividual
         if (ini_especial > 2){
             //Inicializo tupla con la solucion de greedy
             for (int x = 0; x < genome.length; x++)
-                genome[x]=s.getResultadosGreedys()[ini_especial-1][x];
+                genome[x]=s.getResultadosGreedys()[ini_especial - 3][x];
             s.decreaseInicializacionEspecial();
         }
         else if (ini_especial == 2){
