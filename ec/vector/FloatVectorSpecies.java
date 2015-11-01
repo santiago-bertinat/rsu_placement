@@ -454,7 +454,7 @@ public class FloatVectorSpecies extends VectorSpecies
         setupGenome(state, base);
 
         //Inicializo la variable de inicializaciones especiales
-        inicializacion_especial = 3;
+        inicializacion_especial = 2;
 
         // OUT OF BOUNDS RETRIES
         outOfBoundsRetries = state.parameters.getIntWithDefault(base.push(P_OUTOFBOUNDS_RETRIES), def.push(P_OUTOFBOUNDS_RETRIES), DEFAULT_OUT_OF_BOUNDS_RETRIES);
@@ -520,13 +520,19 @@ public class FloatVectorSpecies extends VectorSpecies
             for (int i = 0; i < genomeSize; i++){
                 line = br.readLine();
                 line_tokens = line.split(",");
-                segmentos[i][0] = Double.parseDouble(line_tokens[0]);
-                segmentos[i][1] = Double.parseDouble(line_tokens[1]);
-                segmentos[i][2] = Double.parseDouble(line_tokens[2]);
-                segmentos[i][3] = Double.parseDouble(line_tokens[3]);
-                distancia_segmento[i]= Double.parseDouble(line_tokens[4]);
+                segmentos[i][0] = Double.parseDouble(line_tokens[1]);
+                segmentos[i][1] = Double.parseDouble(line_tokens[0]);
+                segmentos[i][2] = Double.parseDouble(line_tokens[3]);
+                segmentos[i][3] = Double.parseDouble(line_tokens[2]);
+                distancia_segmento[i] = twoPointsDistance(
+                    segmentos[i][0],
+                    segmentos[i][1],
+                    segmentos[i][2],
+                    segmentos[i][3]
+                );
                 vehiculos_segmento[i] = Double.parseDouble(line_tokens[5]);
                 total_vehiculos += vehiculos_segmento[i];
+
             }
             br.close();
             System.out.println("max qos:");
@@ -557,20 +563,21 @@ public class FloatVectorSpecies extends VectorSpecies
             br.close();
 
             // Cargo los greedys
-            String ruta_greedys = state.parameters.getStringWithDefault(base.push(P_RUTA_RES_GREEDY), def.push(P_RUTA_RES_GREEDY), null);
-            fin = new File(ruta_greedys);
-            fis = new FileInputStream(fin);
-            br = new BufferedReader(new InputStreamReader(fis));
-            line = null;
-            line_tokens = null;
+            // String ruta_greedys = state.parameters.getStringWithDefault(base.push(P_RUTA_RES_GREEDY), def.push(P_RUTA_RES_GREEDY), null);
+            // fin = new File(ruta_greedys);
+            // fis = new FileInputStream(fin);
+            // br = new BufferedReader(new InputStreamReader(fis));
+            // line = null;
+            // line_tokens = null;
 
-            for (int i = 0; i < 1; i++){
-                line = br.readLine();
-                line_tokens = line.split(",");
-                for (int j = 0; j < genomeSize; j++)
-                    resultados_greedys[i][j] = Float.parseFloat(line_tokens[j]);
-            }
-            br.close();
+            // for (int i = 0; i < 12; i++){
+            //     line = br.readLine();
+            //     line_tokens = line.split(",");
+            //     for (int j = 0; j < genomeSize; j++) {
+            //         resultados_greedys[i][j] = Float.parseFloat(line_tokens[j]);
+            //     }
+            // }
+            // br.close();
 
         }catch(IOException e){
             state.output.fatal (e+"hubo algun problema con la lectura del archivo");
@@ -840,6 +847,20 @@ public class FloatVectorSpecies extends VectorSpecies
                     base.push(P_MUTATION_BOUNDED).push(postfix), def.push(P_MUTATION_BOUNDED).push(postfix));
             }
 
+        }
+
+        public static double twoPointsDistance(double x1, double y1, double x2, double y2){
+            double dLat = deg2rad((x1 - x2));
+            double dLon = deg2rad((y1 - y2));
+
+            double x = (dLon) * Math.cos(deg2rad((x1 + x2)/2));
+            double dist = Math.sqrt(x*x + dLat*dLat) * 6371000;
+
+            return (dist);
+        }
+
+        private static double deg2rad(double deg) {
+            return (deg / 180 * Math.PI);
         }
 
     }

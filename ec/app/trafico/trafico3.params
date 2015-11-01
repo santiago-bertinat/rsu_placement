@@ -23,10 +23,10 @@ seed.7 = time
 # Defino la representacion
 pop.subpop.0.species = ec.vector.FloatVectorSpecies
 pop.subpop.0.species.ind = ec.vector.FloatVectorIndividual
-# pop.subpop.0.species.genome-size	= 125
+# pop.subpop.0.species.genome-size  = 125
 pop.subpop.0.species.genome-size  = 128
-pop.subpop.0.species.min-gene	= 0
-pop.subpop.0.species.max-gene 	= 3.999999999999999999
+pop.subpop.0.species.min-gene = 0
+pop.subpop.0.species.max-gene   = 3.999999999999999999
 
 #Dos objetivos, los dos se minimizan
 pop.subpop.0.species.fitness.num-objectives = 2
@@ -35,7 +35,7 @@ pop.subpop.0.species.fitness.maximize.1 = true
 
 
 #Intermediate crossover (pagina 117 manual de ECJ)
-pop.subpop.0.species.crossover-type	= intermediate
+pop.subpop.0.species.crossover-type = intermediate
 pop.subpop.0.species.line-extension = 0.25
 
 #Mutacion gaussiana (pagina 122 manual de ECJ)
@@ -51,14 +51,15 @@ pop.subpop.0.species.mutation-bounded = true
 pop.subpop.0.species.out-of-bounds-retries = 20
 
 
-pop.subpop.0.species.pipe		     	= ec.vector.breed.VectorMutationPipeline
-pop.subpop.0.species.pipe.likelihood        	= 0.1
-
-pop.subpop.0.species.pipe.source.0		= ec.vector.breed.VectorCrossoverPipeline
-pop.subpop.0.species.pipe.source.0.likelihood 	= 0.95
-pop.subpop.0.species.pipe.source.0.source.0 	= ec.select.TournamentSelection
-pop.subpop.0.species.pipe.source.0.source.1 	= same
-select.tournament.size 				= 2
+pop.subpop.0.species.pipe = ec.vector.breed.LocalCostOptimumPipeline
+pop.subpop.0.species.pipe.likelihood = 1
+pop.subpop.0.species.pipe.source.0 = ec.vector.breed.VectorMutationPipeline
+pop.subpop.0.species.pipe.source.0.likelihood = 0.1
+pop.subpop.0.species.pipe.source.0.source.0 = ec.vector.breed.VectorCrossoverPipeline
+pop.subpop.0.species.pipe.source.0.source.0.likelihood = 0.95
+pop.subpop.0.species.pipe.source.0.source.0.source.0 = ec.select.TournamentSelection
+pop.subpop.0.species.pipe.source.0.source.0.source.1 = same
+select.tournament.size = 2
 
 
 #Estadisticas

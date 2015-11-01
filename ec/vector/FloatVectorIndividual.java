@@ -315,7 +315,9 @@ public class FloatVectorIndividual extends VectorIndividual
 
 	        }
 	        else{
-	        	float cambio_de_posicion = (1 / 10) * rng.nextInt(11);
+	        	float cambio_de_posicion = (float)0.10 * rng.nextInt(11);
+                if (cambio_de_posicion == 1)
+                    cambio_de_posicion = (float)0.99;
                 genome[posicion_sorteada] =  tipo_infraestructura + cambio_de_posicion;
 	        }
 
