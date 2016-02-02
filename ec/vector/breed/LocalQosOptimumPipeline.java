@@ -12,7 +12,7 @@ import ec.*;
 import ec.util.*;
 
 import java.util.*;
-import ec.app.trafico.Calculos;
+import ec.app.vehicles_amount.Calculos;
 
 /*
  * VectorMutationPipeline.java
@@ -69,31 +69,39 @@ public class LocalQosOptimumPipeline extends BreedingPipeline
                     inds[q] = (Individual)(inds[q].clone());
 
         // find local optimum
-        int individuo_sorteado = state.random[thread].nextInt(n) + start;
-        FloatVectorIndividual ind = (FloatVectorIndividual)inds[individuo_sorteado];
-        FloatVectorSpecies spe = (FloatVectorSpecies)inds[individuo_sorteado].species;
+        for(int q = start; q < n + start; q++) {
 
-        int posicion_sorteada = state.random[thread].nextInt(ind.genome.length);
-        int tipo_infraestructura = (int) Math.floor(ind.genome[posicion_sorteada]);
+            FloatVectorIndividual ind = (FloatVectorIndividual)inds[start];
+            FloatVectorSpecies spe = (FloatVectorSpecies)inds[q].species;
 
-        double max_qos = Calculos.qos(ind);
-        double max_position = ind.genome[posicion_sorteada];
-        if (tipo_infraestructura != 0) {
-          for (int i = 0; i <= 5; i++){
-            float cambio_de_posicion = (float)0.2 * (float)i;
-            if (cambio_de_posicion == 1)
-              cambio_de_posicion = (float)0.99;
-            ind.genome[posicion_sorteada] =  tipo_infraestructura + cambio_de_posicion;
+            int posicion_sorteada = state.random[thread].nextInt(ind.genome.length);
+            int tipo_infraestructura = (int) Math.floor(ind.genome[posicion_sorteada]);
 
-            double qos_nuevo = Calculos.qos(ind);
-            if (qos_nuevo > max_qos) {
-              max_qos = qos_nuevo;
-              max_position = ind.genome[posicion_sorteada];
+            double max_qos = Calculos.qos(ind);
+            double old_position = ind.genome[posicion_sorteada];
+            double max_position = ind.genome[posicion_sorteada];
+            System.out.println("LOCAL QOS: ");
+            if (tipo_infraestructura != 0) {
+                for (int i = 0; i <= 5; i++){
+                    float cambio_de_posicion = (float)0.2 * (float)i;
+                    if (cambio_de_posicion == 1)
+                      cambio_de_posicion = (float)0.99;
+                    ind.genome[posicion_sorteada] =  tipo_infraestructura + cambio_de_posicion;
+
+                    double qos_nuevo = Calculos.qos(ind);
+                    if (qos_nuevo > max_qos) {
+                      max_qos = qos_nuevo;
+                      max_position = ind.genome[posicion_sorteada];
+                    }
+                }
+
+                ind.genome[posicion_sorteada] = (float) max_position;
+                ((VectorIndividual)inds[q]).evaluated = false;
             }
-          }
 
-          ind.genome[posicion_sorteada] = (float) max_position;
-          ((VectorIndividual)inds[individuo_sorteado]).evaluated = false;
+            System.out.println(ind.genome[posicion_sorteada]);
+            System.out.println(old_position);
+
         }
 
         return n;

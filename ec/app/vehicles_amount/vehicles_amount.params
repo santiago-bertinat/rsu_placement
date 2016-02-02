@@ -1,0 +1,81 @@
+parent.0 = ../../multiobjective/nsga2/nsga2.params
+
+# Defino el problema
+eval.problem = ec.app.vehicles_amount.VehiclesAmount
+
+# Defino las variables generales al problema
+pop.subpop.0.size =                     72
+generations =                           10000
+
+# Hilos y semillas
+evalthreads = 8
+breedthreads = 8
+seed.0 = time
+seed.1 = time
+seed.2 = time
+seed.3 = time
+seed.4 = time
+seed.5 = time
+seed.6 = time
+seed.7 = time
+
+
+# Defino la representacion
+pop.subpop.0.species = ec.vector.FloatVectorSpecies
+pop.subpop.0.species.ind = ec.vector.FloatVectorIndividual
+# pop.subpop.0.species.genome-size	= 125
+pop.subpop.0.species.genome-size  = 128
+pop.subpop.0.species.min-gene	= 0
+pop.subpop.0.species.max-gene 	= 3.999999999999999999
+
+#Dos objetivos, los dos se minimizan
+pop.subpop.0.species.fitness.num-objectives = 2
+pop.subpop.0.species.fitness.maximize.0 = false
+pop.subpop.0.species.fitness.maximize.1 = true
+
+
+#Intermediate crossover (pagina 117 manual de ECJ)
+pop.subpop.0.species.crossover-type	= intermediate
+pop.subpop.0.species.line-extension = 0.25
+
+#Mutacion gaussiana (pagina 122 manual de ECJ)
+
+prob-mut-cambiar-a-cero = 0.5
+prob-mut-cambiar-antena = 0.25
+prob-mut-cambiar-gaussiana = 0.25
+
+#Mutacion gaussiana con std y numero de reintento en caso que el resultado este fuera de los limites de min y max gene
+pop.subpop.0.species.mutation-type      = gauss
+pop.subpop.0.species.mutation-stdev = 0.25
+pop.subpop.0.species.mutation-bounded = true
+pop.subpop.0.species.out-of-bounds-retries = 20
+
+
+pop.subpop.0.species.pipe		     	= ec.vector.breed.VectorMutationPipeline
+pop.subpop.0.species.pipe.likelihood        	= 0.1
+
+pop.subpop.0.species.pipe.source.0		= ec.vector.breed.VectorCrossoverPipeline
+pop.subpop.0.species.pipe.source.0.likelihood 	= 0.95
+pop.subpop.0.species.pipe.source.0.source.0 	= ec.select.TournamentSelection
+pop.subpop.0.species.pipe.source.0.source.1 	= same
+select.tournament.size 				= 2
+
+
+#Estadisticas
+stat.silent.print = true
+stat.modulo.front = 5000
+#silent = true
+stat.solution.file=$solution.stat
+
+#Numero de ejecuciones
+jobs = 1
+
+#Ruta a archivo de coordenadas
+pop.subpop.0.species.ruta-res-greedys = instancias/res_greedy_normal.txt
+pop.subpop.0.species.ruta-adyacencias = instancias/normal.txt
+pop.subpop.0.species.ruta-antenas = antenas.txt
+pop.subpop.0.species.numero-puntos = 124
+
+
+#Esta probabilidad de mutacion no se tiene en cuenta para nada (pero la pide el ecj). Cambiarla no tiene ningun efecto.
+pop.subpop.0.species.mutation-prob = 0.1

@@ -50,7 +50,8 @@ ec/vector/breed/*.java \
 ec/parsimony/*.java\
 ec/rule/*.java \
 ec/rule/breed/*.java \
-ec/app/trafico/*.java \
+ec/app/vehicles_amount/*.java \
+ec/app/effective_range/*.java \
 
 all: base
 

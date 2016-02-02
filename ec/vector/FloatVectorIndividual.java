@@ -647,6 +647,7 @@ public class FloatVectorIndividual extends VectorIndividual
         	        }
         	    }
         }
+
         }
 
     public int hashCode()

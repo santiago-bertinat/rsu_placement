@@ -11,9 +11,9 @@ import ec.vector.*;
 import ec.*;
 import ec.util.*;
 
-/* 
+/*
  * VectorCrossoverPipeline.java
- * 
+ *
  * Created: Tue Mar 13 15:03:12 EST 2001
  * By: Sean Luke
  */
@@ -22,11 +22,11 @@ import ec.util.*;
 /**
  *
  VectorCrossoverPipeline is a BreedingPipeline which implements a simple default crossover
- for VectorIndividuals.  Normally it takes two individuals and returns two crossed-over 
+ for VectorIndividuals.  Normally it takes two individuals and returns two crossed-over
  child individuals.  Optionally, it can take two individuals, cross them over, but throw
  away the second child (a one-child crossover).  VectorCrossoverPipeline works by calling
  defaultCrossover(...) on the first parent individual.
- 
+
  <p><b>Typical Number of Individuals Produced Per <tt>produce(...)</tt> call</b><br>
  2 * minimum typical number of individuals produced by each source, unless tossSecondParent
  is set, in which case it's simply the minimum typical number.
@@ -83,7 +83,7 @@ public class VectorCrossoverPipeline extends BreedingPipeline
         tossSecondParent = state.parameters.getBoolean(base.push(P_TOSS),
             def.push(P_TOSS),false);
         }
-        
+
     /** Returns 2 * minimum number of typical individuals produced by any sources, else
         1* minimum number if tossSecondParent is true. */
     public int typicalIndsProduced()
@@ -91,20 +91,20 @@ public class VectorCrossoverPipeline extends BreedingPipeline
         return (tossSecondParent? minChildProduction(): minChildProduction()*2);
         }
 
-    public int produce(final int min, 
-        final int max, 
+    public int produce(final int min,
+        final int max,
         final int start,
         final int subpopulation,
         final Individual[] inds,
         final EvolutionState state,
-        final int thread) 
+        final int thread)
 
         {
         // how many individuals should we make?
         int n = typicalIndsProduced();
         if (n < min) n = min;
         if (n > max) n = max;
-                
+
         // should we bother?
         if (!state.random[thread].nextBoolean(likelihood))
             return reproduce(n, start, subpopulation, inds, state, thread, true);  // DO produce children from source -- we've not done so already
@@ -116,7 +116,7 @@ public class VectorCrossoverPipeline extends BreedingPipeline
                 {
                 sources[0].produce(2,2,0,subpopulation,parents,state,thread);
                 if (!(sources[0] instanceof BreedingPipeline))  // it's a selection method probably
-                    { 
+                    {
                     parents[0] = (VectorIndividual)(parents[0].clone());
                     parents[1] = (VectorIndividual)(parents[1].clone());
                     }
@@ -130,18 +130,18 @@ public class VectorCrossoverPipeline extends BreedingPipeline
                 if (!(sources[1] instanceof BreedingPipeline)) // it's a selection method probably
                     parents[1] = (VectorIndividual)(parents[1].clone());
                 }
-                
+
             // at this point, parents[] contains our two selected individuals,
             // AND they're copied so we own them and can make whatever modifications
             // we like on them.
-    
+
             // so we'll cross them over now.  Since this is the default pipeline,
             // we'll just do it by calling defaultCrossover on the first child
-            
+
             parents[0].defaultCrossover(state,thread,parents[1]);
             parents[0].evaluated=false;
             parents[1].evaluated=false;
-            
+
             // add 'em to the population
             inds[q] = parents[0];
             q++;
@@ -154,10 +154,10 @@ public class VectorCrossoverPipeline extends BreedingPipeline
         return n;
         }
     }
-    
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
+

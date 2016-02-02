@@ -12,7 +12,7 @@ import ec.*;
 import ec.util.*;
 
 import java.util.*;
-import ec.app.trafico.Calculos;
+import ec.app.vehicles_amount.Calculos;
 
 /*
  * VectorMutationPipeline.java
@@ -69,7 +69,7 @@ public class LocalCostOptimumPipeline extends BreedingPipeline
                     inds[q] = (Individual)(inds[q].clone());
 
         // find local optimum
-        int individuo_sorteado = state.random[thread].nextInt(n) + start;
+        int individuo_sorteado = start;
         FloatVectorIndividual ind = (FloatVectorIndividual)inds[individuo_sorteado];
         FloatVectorSpecies spe = (FloatVectorSpecies)inds[individuo_sorteado].species;
 
@@ -80,16 +80,14 @@ public class LocalCostOptimumPipeline extends BreedingPipeline
         double original_qos = Calculos.qos(ind);
         int nueva_infrastructura = tipo_infraestructura - 1;
         double qos = original_qos;
-        // System.out.println("######");
-        // System.out.println(original_qos);
-        // System.out.println(tipo_infraestructura);
-        // System.out.println("######");
+
+        System.out.println("LOCAL COST: ");
         if (tipo_infraestructura != 0) {
             for (; nueva_infrastructura >= 0; nueva_infrastructura--) {
                 ind.genome[posicion_sorteada] =  nueva_infrastructura + posicion;
                 qos = Calculos.qos(ind);
                 // System.out.println(qos);
-                if (qos < original_qos * 0.95) {
+                if (qos < original_qos * 0.99) {
                     nueva_infrastructura++;
                     break;
                 }
@@ -105,9 +103,10 @@ public class LocalCostOptimumPipeline extends BreedingPipeline
                 ind.genome[posicion_sorteada] =  (float)tipo_infraestructura + posicion;
             }
 
-            // System.out.println("%%%%%%");
-            // System.out.println(nueva_infrastructura);
-            // System.out.println(Calculos.qos(ind));
+            System.out.println(original_qos);
+            System.out.println(qos);
+            System.out.println(tipo_infraestructura);
+            System.out.println(nueva_infrastructura);
         }
 
         return n;

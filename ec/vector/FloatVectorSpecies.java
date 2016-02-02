@@ -348,7 +348,6 @@ public class FloatVectorSpecies extends VectorSpecies
         return precio_antena;
     }
 
-
     public double [] getRadioAntena(){
         return radio_antena;
     }
@@ -454,7 +453,7 @@ public class FloatVectorSpecies extends VectorSpecies
         setupGenome(state, base);
 
         //Inicializo la variable de inicializaciones especiales
-        inicializacion_especial = 2;
+        inicializacion_especial = 9;
 
         // OUT OF BOUNDS RETRIES
         outOfBoundsRetries = state.parameters.getIntWithDefault(base.push(P_OUTOFBOUNDS_RETRIES), def.push(P_OUTOFBOUNDS_RETRIES), DEFAULT_OUT_OF_BOUNDS_RETRIES);
@@ -562,22 +561,22 @@ public class FloatVectorSpecies extends VectorSpecies
             }
             br.close();
 
-            // Cargo los greedys
-            // String ruta_greedys = state.parameters.getStringWithDefault(base.push(P_RUTA_RES_GREEDY), def.push(P_RUTA_RES_GREEDY), null);
-            // fin = new File(ruta_greedys);
-            // fis = new FileInputStream(fin);
-            // br = new BufferedReader(new InputStreamReader(fis));
-            // line = null;
-            // line_tokens = null;
+            // Cargo Inicializacion
+            String ruta_greedys = state.parameters.getStringWithDefault(base.push(P_RUTA_RES_GREEDY), def.push(P_RUTA_RES_GREEDY), null);
+            fin = new File(ruta_greedys);
+            fis = new FileInputStream(fin);
+            br = new BufferedReader(new InputStreamReader(fis));
+            line = null;
+            line_tokens = null;
 
-            // for (int i = 0; i < 12; i++){
-            //     line = br.readLine();
-            //     line_tokens = line.split(",");
-            //     for (int j = 0; j < genomeSize; j++) {
-            //         resultados_greedys[i][j] = Float.parseFloat(line_tokens[j]);
-            //     }
-            // }
-            // br.close();
+            for (int i = 0; i < 6; i++){
+                line = br.readLine();
+                line_tokens = line.split(",");
+                for (int j = 0; j < genomeSize; j++) {
+                    resultados_greedys[i][j] = Float.parseFloat(line_tokens[j]);
+                }
+            }
+            br.close();
 
         }catch(IOException e){
             state.output.fatal (e+"hubo algun problema con la lectura del archivo");
